@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+<h1>Oops! Something went wrong.</h1>
+
+<h2 th:text="${error} + ' [' + ${status} + ']'"></h2>
+<h3 th:text="'End Point:  ' + ${path} + ' [' + ${method} + ']'"></h3>
+<h3 th:text="'Query Parameter: ' + ${query}"></h3>
+<h2 th:text="${exceptionType} + ': ' + ${exceptionMessage}"></h2>
+<h3 th:text="'User Agent: ' + ${userAgent}"></h3>
+
+<a th:href="@{/artists/all}">
+    <br/>
+    <button type="button" class="base-button red-button">Back to Home</button>
+    <br/>
+</a>
+</body>
+</html>
