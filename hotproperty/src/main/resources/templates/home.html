@@ -1,0 +1,29 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  lang="en"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to HotProperties</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body class="home-background">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="welcome-container">
+      <h1>Welcome to HotProperties</h1>
+      <p class="tagline">
+        Find your dream home or manage your listings with ease.
+      </p>
+      <div class="action-buttons">
+        <a th:href="@{/login}" class="btn btn-primary">Login</a>
+        <a th:href="@{/register}" class="btn btn-secondary">Register</a>
+      </div>
+      <p class="app-version" th:text="'App version: ' + ${appVersion}"></p>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </body>
+</html>

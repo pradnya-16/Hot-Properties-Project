@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login - HotProperties</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body class="auth-background">
+    <div th:replace="~{fragments/header :: header}"></div>
 
-</body>
+    <div class="auth-container">
+      <h2>Login</h2>
+
+      <div
+        th:if="${errorMessage}"
+        class="alert alert-danger"
+        th:text="${errorMessage}"
+      ></div>
+      <div
+        th:if="${successMessage}"
+        class="alert alert-success"
+        th:text="${successMessage}"
+      ></div>
+
+      <form th:action="@{/login}" th:object="${loginRequestDto}" method="post">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            th:field="*{email}"
+            class="form-control"
+            required
+            autofocus
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            th:field="*{password}"
+            class="form-control"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+      <p class="auth-switch">
+        Don't have an account? <a th:href="@{/register}">Register here</a>.
+      </p>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </body>
 </html>
