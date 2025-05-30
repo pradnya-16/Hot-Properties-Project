@@ -50,7 +50,7 @@ public class AuthController {
         
         if (authentication != null && authentication.isAuthenticated() && 
             !authentication.getName().equals("anonymousUser")) {
-            return "redirect:shared/dashboard";
+            return "redirect:/dashboard";
         }
         
         if (error != null) {
@@ -71,7 +71,7 @@ public class AuthController {
     public String registerPage(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated() && 
             !authentication.getName().equals("anonymousUser")) {
-            return "redirect:shared/dashboard"; 
+            return "redirect:/dashboard";
         }
         
         model.addAttribute("userRegistrationDto", new UserRegistrationDto());
@@ -93,7 +93,7 @@ public class AuthController {
             response.addCookie(jwtCookie);
             
             log.info("User {} logged in successfully");
-            return "redirect:shared/dashboard"; 
+            return "redirect:/dashboard";
         } catch (BadCredentialsException e) {
             log.warn("Login attempt failed for email: {}", loginRequestDto.getEmail());
             model.addAttribute("errorMessage", "Invalid email or password.");
