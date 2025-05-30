@@ -2,7 +2,6 @@ package edu.finalproject.hotproperty.config;
 
 import edu.finalproject.hotproperty.services.CustomUserDetailsService;
 import edu.finalproject.hotproperty.utils.JwtAuthenticationFilter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,36 +46,34 @@ public class SecurityConfig {
     return authProvider;
   }
 
+  // ✅ Add this missing AuthenticationManager bean
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-    return authConfig.getAuthenticationManager();
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .csrf(AbstractHttpConfigurer::disable)
-        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**", "/js/**", "/webjars/**",
-                "/error")
-            .permitAll()
-            .requestMatchers("/admin/**").hasRole("ADMIN")
-            .requestMatchers("/agent/**").hasRole("AGENT")
-            .requestMatchers("/buyer/**").hasRole("BUYER")
-            .anyRequest().authenticated())
-        .logout(logout -> logout
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/login?logout")
-            .invalidateHttpSession(true)
-            .deleteCookies("jwtTokenHotProperties")
-            .permitAll());
-
-    http.authenticationProvider(authenticationProvider());
-    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .csrf(AbstractHttpConfigurer::disable)
+            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**", "/js/**", "/webjars/**", "/error")
+                    .permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/agent/**").hasRole("AGENT")
+                    .requestMatchers("/buyer/**").hasRole("BUYER")
+                    .anyRequest().authenticated())
+            .logout(logout -> logout
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/login?logout")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("jwtTokenHotProperties")
+                    .permitAll())
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
-
 }

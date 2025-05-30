@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.Collection;
 import java.util.Collections;
 
@@ -28,18 +27,16 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("❌ User not found with email: " + email));
 
         Collection<GrantedAuthority> authorities = Collections.singletonList(
                 new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
         );
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), 
+                user.getEmail(),
                 user.getPassword(),
                 authorities
         );
     }
 }
-
-
