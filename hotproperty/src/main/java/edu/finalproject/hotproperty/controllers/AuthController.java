@@ -50,7 +50,7 @@ public class AuthController {
         
         if (authentication != null && authentication.isAuthenticated() && 
             !authentication.getName().equals("anonymousUser")) {
-            return redirectToDashboard(authentication);
+            return "redirect:shared/dashboard";
         }
         
         if (error != null) {
@@ -71,7 +71,7 @@ public class AuthController {
     public String registerPage(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated() && 
             !authentication.getName().equals("anonymousUser")) {
-            return redirectToDashboard(authentication);
+            return "redirect:shared/dashboard"; 
         }
         
         model.addAttribute("userRegistrationDto", new UserRegistrationDto());
@@ -92,11 +92,8 @@ public class AuthController {
             Cookie jwtCookie = authService.loginAndCreateJwtCookie(loginRequestDto);
             response.addCookie(jwtCookie);
             
-            User user = userService.findByEmail(loginRequestDto.getEmail());
-            String redirectUrl = getDashboardUrlByRole(user.getRole());
-            
-            log.info("User {} logged in successfully, redirecting to {}", loginRequestDto.getEmail(), redirectUrl);
-            return "redirect:" + redirectUrl;
+            log.info("User {} logged in successfully");
+            return "redirect:shared/dashboard"; 
         } catch (BadCredentialsException e) {
             log.warn("Login attempt failed for email: {}", loginRequestDto.getEmail());
             model.addAttribute("errorMessage", "Invalid email or password.");
@@ -126,30 +123,9 @@ public class AuthController {
         }
     }
 
-    private String redirectToDashboard(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.findByEmail(userDetails.getUsername());
-        
-        if (user != null) {
-            String dashboardUrl = getDashboardUrlByRole(user.getRole());
-            log.info("User {} already authenticated, redirecting to {}", user.getEmail(), dashboardUrl);
-            return "redirect:" + dashboardUrl;
-        }
-        
-        return "redirect:/buyer/dashboard";
-    }
+    
 
-    private String getDashboardUrlByRole(RoleType role) {
-        switch (role) {
-            case ADMIN:
-                return "/admin/dashboard";
-            case AGENT:
-                return "/agent/dashboard";
-            case BUYER:
-            default:
-                return "/buyer/dashboard";
-        }
-    }
+    
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
