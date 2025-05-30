@@ -5,39 +5,49 @@
     <title>Add Property - HotProperties</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
+<body class="home-background">
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="form-container">
+<div class="auth-container register-container">
     <h2>Add New Property</h2>
+
     <form method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label>Title</label>
-            <input type="text" name="title" class="form-control" required />
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" class="form-control" required />
         </div>
+
         <div class="form-group">
-            <label>Price ($)</label>
-            <input type="number" name="price" class="form-control" step="0.01" required />
+            <label for="price">Price ($):</label>
+            <input type="number" id="price" name="price" step="0.01" class="form-control" required />
         </div>
+
         <div class="form-group">
-            <label>Location</label>
-            <input type="text" name="location" class="form-control" placeholder="City, State, ZIP" required />
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" placeholder="City, State, ZIP" class="form-control" required />
         </div>
+
         <div class="form-group">
-            <label>Size (sq. ft.)</label>
-            <input type="number" name="size" class="form-control" required />
+            <label for="size">Size (sq ft):</label>
+            <input type="number" id="size" name="size" class="form-control" required />
         </div>
+
         <div class="form-group">
-            <label>Description</label>
-            <textarea name="description" class="form-control" rows="4" required></textarea>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
         </div>
+
         <div class="form-group">
-            <label>Upload Image</label>
-            <input type="file" name="image" class="form-control-file" />
+            <label for="image">Upload Property Images:</label>
+            <input type="file" id="image" name="image" class="form-control-file" />
         </div>
-        <button type="submit" class="btn btn-primary">Add Property</button>
-        <button type="submit" class="btn btn-primary">Back to Dashboard</button>
+
+        <div class="button-row">
+            <button type="submit" class="btn btn-success">Add Property</button>
+            <a th:href="@{/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+        </div>
     </form>
 </div>
+
 </body>
 </html>

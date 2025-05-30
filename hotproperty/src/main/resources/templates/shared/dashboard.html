@@ -25,7 +25,7 @@
     </div>
     <div th:if="${user.role.name() == 'AGENT'}">
       <a th:href="@{/manage_properties}" class="dashboard-link">Manage Listing</a><br>
-      <a th:href="@{/add_properties}" class="dashboard-link">Add New Property</a><br>
+      <a th:href="@{/agent/add_properties}" class="dashboard-link">Add New Property</a><br>
       <a th:href="@{/agent/view_messages}" class="dashboard-link">View Messages</a><br>
     </div>
     <div th:if="${user.role.name() == 'ADMIN'}">
