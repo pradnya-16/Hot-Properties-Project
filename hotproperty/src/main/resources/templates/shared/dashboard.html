@@ -5,7 +5,7 @@
   <title>Dashboard</title>
   <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
+<body class="home-background">
   <div th:replace="~{fragments/icon_only_header :: header}"></div>
 <div class="dashboard-container">
   <h1 th:text="${'Welcome, ' + user.firstName + ' ' + user.lastName + '!'}"></h1>

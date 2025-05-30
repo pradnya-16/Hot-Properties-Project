@@ -1,9 +1,6 @@
 package edu.finalproject.hotproperty.controllers;
 
-import edu.finalproject.hotproperty.entities.Favorite;
-import edu.finalproject.hotproperty.entities.Message;
-import edu.finalproject.hotproperty.entities.Property;
-import edu.finalproject.hotproperty.entities.User;
+import edu.finalproject.hotproperty.entities.*;
 import edu.finalproject.hotproperty.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -68,9 +67,24 @@ public class BuyerController {
 
     @PreAuthorize("hasRole('BUYER')")
     @GetMapping("/properties/list")
-    public String viewProperties(Model model) {
-        List <Property> properties = propertyRepository.findAll();
+    public String viewProperties(
+            @RequestParam(required = false) String zip,
+            @RequestParam(required = false) Integer minSqFt,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false, defaultValue = "asc") String sortBy,
+            Model model) {
+
+        // Just for now, find all (later filter based on params)
+        List<Property> properties = propertyRepository.findAll();
+
         model.addAttribute("properties", properties);
+        model.addAttribute("zip", zip);
+        model.addAttribute("minSqFt", minSqFt);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("sortBy", sortBy);
+
         return "/buyer/browse_properties";
     }
 }
