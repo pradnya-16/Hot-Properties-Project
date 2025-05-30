@@ -1,0 +1,25 @@
+<!doctype html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        lang="en"
+>
+<head>
+  <meta charset="UTF-8" />
+  <title>Hot Properties Header</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header th:fragment="header" class="site-header">
+  <div class="logo-container">
+    <a th:href="@{/}">
+      <img
+              th:src="@{/images/logo.png}"
+              alt="Hot Properties Logo"
+              class="site-logo-img"
+      />
+    </a>
+  </div>
+</header>
+</body>
+</html>

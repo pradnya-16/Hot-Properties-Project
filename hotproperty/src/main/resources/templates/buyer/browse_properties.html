@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Available Properties</title>
 </head>
 <body>
-$END$
+  <div th:replace="~{header :: header}"></div>
+  <h2 th:text="${'Available Properties (' + properties.size() + ')'}"></h2>
+  <form th:action="@{/properties/list}" method="get">
+    <input type="text" name="zip" th:value="${zip}">
+    <input type="number" name="minSqFt" th:value="${minSqFt}">
+    <input type="number" name="minPrice" th:value="${minPrice}">
+    <input type="number" name="maxPrice" th:value="${maxPrice}">
+    <select>
+      <option value="asc" th:selected="${sortBy =='asc'}">Price: Low to High</option>
+      <option value="desc" th:selected="${sortBy =='desc'}">Price: High to Low</option>
+    </select>
+    <button type="submit">Search</button>
+    <a href="/properties/list"><button type="button">Clear</button></a>
+  </form>
+
+<div th:each="property: ${properties}">
+  <img th:src="@{'/PropertyImages/' + ${#lists.first(property.images).imageFileName}}" alt="Property Image">
+
+  <div>
+    <h3 th:text="${property.title}">Title</h3>
+    <p><strong>Price:</strong> <span th:text="${property.price}"></span></p>
+    <p><strong>Location:</strong> <span th:text="${property.location}"></span></p>
+    <p><strong>Sq. Ft:</strong> <span th:text="${property.size}"></span></p>
+    <a th:href="@{/properties/view/{id}(id=${property.id})}">
+      View Details
+    </a>
+  </div>
+
+</div>
 </body>
 </html>

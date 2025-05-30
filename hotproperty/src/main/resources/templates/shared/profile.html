@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>My Profile</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
-$END$
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <div class="profile-container">
+    <h1>My Profile</h1>
+
+    <table class="profile-table">
+      <tr>
+        <td><strong>First Name:</strong></td>
+        <td th:text="${user.firstName}"></td>
+      </tr>
+      <tr>
+        <td><strong>Last Name:</strong></td>
+        <td th:text="${user.lastName}"></td>
+      </tr>
+      <tr>
+        <td><strong>Email:</strong></td>
+        <td th:text="${user.email}"></td>
+      </tr>
+      <tr>
+        <td><strong>Role:</strong></td>
+        <td th:text="${user.role}"></td>
+      </tr>
+    </table>
+
+    <div class="button-row">
+      <a th:href="@{/edit_profile}" class="btn btn-primary">Edit Profile</a>
+      <a th:href="@{/dashboard}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+  </div>
 </body>
 </html>

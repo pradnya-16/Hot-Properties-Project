@@ -22,7 +22,7 @@
       </div>
       <nav class="main-nav">
         <ul sec:authorize="isAuthenticated()">
-          <li><a th:href="@{/logout}" class="nav-button">Logout</a></li>
+          <li><a th:href="@{/dashboard}" class="nav-button">🡸 Dashboard</a></li>
         </ul>
         <ul sec:authorize="!isAuthenticated()">
           <li><a th:href="@{/login}" class="nav-button">Login</a></li>
