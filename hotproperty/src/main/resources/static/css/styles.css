@@ -354,7 +354,7 @@ body {
   font-size: 1.8em;
 }
 
-.detail-container p {
+.user-detail-container p {
   margin: 4px 0;
 }
 
@@ -406,6 +406,71 @@ body {
 .logout-container {
   margin: 10px auto;
   text-align: center;
+}
+
+/* --------------------------------------------------
+  Property Detail Page
+-------------------------------------------------- */
+.property-detail-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.property-detail-table{
+  width: 50%;
+  border-collapse: collapse;
+}
+
+.property-detail-table th{
+  text-align: left;
+  font-weight: 700;
+}
+
+.property-detail-table td {
+  text-align: left;
+}
+
+.property-images {
+  width: 300px;
+  height: auto;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.message-input-box {
+  width: 90%;
+  height: 100px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.send-message-btn {
+  padding: 2px 15px;
+  font-size: 1.1em;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 3px;
+  margin: 0 0px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+}
+
+.send-message-btn:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transform: translateY(-2px);
 }
 
 

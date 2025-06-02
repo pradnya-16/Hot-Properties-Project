@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${property.title}">Property Details</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body class="home-background">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="property-detail-container">
+        <div class="title-row">
+            <h1 th:text="${property.title}"></h1>
+
+            <!--TODO: Add/Remove favorite functionality-->
+            <button class="btn btn-primary">Add to Favorite</button>
+        </div>
+
+        <table class="property-detail-table">
+            <tr>
+                <th>Price:</th>
+                <td th:text="${property.price.intValue()}"></td>
+            </tr>
+            <tr>
+                <th>Location:</th>
+                <td th:text="${property.location}"></td>
+            </tr>
+            <tr>
+                <th>Size:</th>
+                <td th:text="${property.size}"></td>
+            </tr>
+        </table>
+
+        <div>
+            <h3><strong>Description:</strong></h3>
+        </div>
+        <p  th:text="${property.description}"></p>
+        <h2><strong>Property Images</strong></h2>
+        <div th:each="image: ${property.images}">
+            <img class="property-images" th:src="@{'/PropertyImages/' + ${property.title} + '/' + ${image.imageFileName}}">
+        </div>
+        <h2><strong>Contact the Agent</strong></h2>
+
+        <p>Your Message:</p>
+        <div>
+            <input  class="message-input-box" />
+        </div>
+
+        <div>
+            <!--TODO: send message functionality-->
+            <a th:href="@{/properties/view/{id}(id=${property.id})}" class="send-message-btn">Send Message</a>
+        </div>
+        <div>
+            <a th:href="@{/properties/list}">← Back to Listing</a>
+        </div>
+    </div>
+</body>
+</html>
