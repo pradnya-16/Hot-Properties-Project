@@ -1,3 +1,4 @@
+
 package edu.finalproject.hotproperty.services;
 
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//Handles user registration, different from customer user detsails service which is used for authentication
 @Service
 public class UserServiceImpl implements UserService {
 
