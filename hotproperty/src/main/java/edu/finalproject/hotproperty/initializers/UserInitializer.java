@@ -4,6 +4,8 @@ import edu.finalproject.hotproperty.entities.User;
 import edu.finalproject.hotproperty.entities.enums.RoleType;
 import edu.finalproject.hotproperty.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +22,7 @@ public class UserInitializer {
     }
 
     @PostConstruct
+  @Transactional
     public void init() {
         if(userRepository.count() == 0) {
             User admin = new User("Samuel", "Admin", "admin@example.com", passwordEncoder.encode("admin123"), RoleType.ADMIN);
