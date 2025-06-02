@@ -20,6 +20,7 @@ import java.util.List;
 
 @Controller
 public class BuyerController {
+  //for when we start implementing stuff in here and need logging
   private static final Logger log = LoggerFactory.getLogger(BuyerController.class); 
 
   private final UserRepository userRepository;

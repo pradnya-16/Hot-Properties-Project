@@ -82,6 +82,7 @@ public class UserController {
       HttpServletResponse httpServletResponse,
       Model model) {
     if (bindingResult.hasErrors()) {
+      //probs not necessary, good practice!
       log.warn("Binding errors in edit profile form for user: {}", userDetails.getUsername());
       model.addAttribute("errorMessage", "Please correct the errors below.");
       return "shared/edit_profile";
