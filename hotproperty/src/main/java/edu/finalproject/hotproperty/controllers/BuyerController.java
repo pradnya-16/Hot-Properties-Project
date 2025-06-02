@@ -2,6 +2,7 @@ package edu.finalproject.hotproperty.controllers;
 
 import edu.finalproject.hotproperty.entities.Favorite;
 import edu.finalproject.hotproperty.entities.Message;
+import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.User;
 import edu.finalproject.hotproperty.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class BuyerController {
         User buyer = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
         List<Favorite> favorites = favoriteRepository.findByBuyer(buyer);
         model.addAttribute("favorites", favorites);
-        return "/favorites";
+        return "/buyer/favorites";
     }
 
     @PreAuthorize("hasRole('BUYER')")
@@ -62,6 +63,14 @@ public class BuyerController {
         User buyer = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
         List<Message> messages = messageRepository.findBySender(buyer);
         model.addAttribute("messages", messages);
-        return "buyer/messages";
+        return "/buyer/view_messages";
+    }
+
+    @PreAuthorize("hasRole('BUYER')")
+    @GetMapping("/properties/list")
+    public String viewProperties(Model model) {
+        List <Property> properties = propertyRepository.findAll();
+        model.addAttribute("properties", properties);
+        return "/buyer/browse_properties";
     }
 }

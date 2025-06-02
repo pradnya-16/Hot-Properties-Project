@@ -18,14 +18,14 @@ public class Property {
   @Column(nullable = false)
   private Double price;
 
-  @Column(columnDefinition = "TEXT")
-  private String description;
-
   @Column(nullable = false, length = 255)
   private String location;
 
   @Column(nullable = false)
   private Integer size;
+
+  @Column(columnDefinition = "TEXT")
+  private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "agent_id", nullable = false)
@@ -43,12 +43,12 @@ public class Property {
   public Property() {
   }
 
-  public Property(String title, Double price, String description, String location, Integer size, User agent) {
+  public Property(String title, Double price, String location, Integer size, String description, User agent) {
     this.title = title;
     this.price = price;
-    this.description = description;
     this.location = location;
     this.size = size;
+    this.description = description;
     this.agent = agent;
   }
 
