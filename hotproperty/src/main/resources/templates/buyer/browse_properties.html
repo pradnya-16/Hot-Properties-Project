@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Available Properties</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
-  <div th:replace="~{header :: header}"></div>
+  <div th:replace="~{fragments/header :: header}"></div>
   <h2 th:text="${'Available Properties (' + properties.size() + ')'}"></h2>
   <form th:action="@{/properties/list}" method="get">
     <input type="text" name="zip" th:value="${zip}">
@@ -20,19 +21,37 @@
     <a href="/properties/list"><button type="button">Clear</button></a>
   </form>
 
-<div th:each="property: ${properties}">
-  <img th:src="@{'/PropertyImages/' + ${#lists.first(property.images).imageFileName}}" alt="Property Image">
-
-  <div>
-    <h3 th:text="${property.title}">Title</h3>
-    <p><strong>Price:</strong> <span th:text="${property.price}"></span></p>
-    <p><strong>Location:</strong> <span th:text="${property.location}"></span></p>
-    <p><strong>Sq. Ft:</strong> <span th:text="${property.size}"></span></p>
-    <a th:href="@{/properties/view/{id}(id=${property.id})}">
-      View Details
-    </a>
-  </div>
-
-</div>
+  <table>
+    <thead>
+    <tr>
+      <th>Image</th>
+      <th>Title</th>
+      <th>Price</th>
+      <th>Location</th>
+      <th>Sq. Ft.</th>
+      <th>Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="property : ${properties}">
+      <td>
+        <div>
+          <img th:src="@{'/PropertyImages/' + ${property.title} + '/' + ${property.images[0].imageFileName}}"
+               alt="Property Image"
+               width="150">
+        </div>
+      </td>
+      <td th:text="${property.title}">Title</td>
+      <td th:text="${property.price.intValue()}">Price</td>
+      <td th:text="${property.location}">Location</td>
+      <td th:text="${property.size}">Sq. Ft</td>
+      <td>
+        <a th:href="@{/properties/view/{id}(id=${property.id})}">
+          View Details
+        </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </body>
 </html>
