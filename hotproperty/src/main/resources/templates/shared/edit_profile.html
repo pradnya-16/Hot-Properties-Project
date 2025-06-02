@@ -1,10 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit My Profile - HotProperties</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body class="auth-background">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="auth-container register-container">
+      <!-- re using a lot of styles -->
+      <h2>Edit Profile</h2>
+
+      <div
+        th:if="${successMessage}"
+        class="alert alert-success"
+        th:text="${successMessage}"
+      ></div>
+      <div
+        th:if="${errorMessage}"
+        class="alert alert-danger"
+        th:text="${errorMessage}"
+      ></div>
+
+      <form
+        th:action="@{/edit_profile}"
+        th:object="${userProfileUpdateDto}"
+        method="post"
+      >
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            th:field="*{firstName}"
+            class="form-control"
+            required
+          />
+          <div
+            th:if="${#fields.hasErrors('firstName')}"
+            th:errors="*{firstName}"
+            class="alert alert-danger"
+          ></div>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            th:field="*{lastName}"
+            class="form-control"
+            required
+          />
+          <div
+            th:if="${#fields.hasErrors('lastName')}"
+            th:errors="*{lastName}"
+            class="alert alert-danger"
+          ></div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            th:field="*{email}"
+            class="form-control"
+            required
+          />
+          <div
+            th:if="${#fields.hasErrors('email')}"
+            th:errors="*{email}"
+            class="alert alert-danger"
+          ></div>
+        </div>
+
+        <div class="button-row">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+          <a th:href="@{/profile}" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </body>
 </html>

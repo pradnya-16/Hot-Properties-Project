@@ -12,4 +12,5 @@ public class AgentController {
     public String showAddPropertyForm() {
         return "agent/add_properties";
     }
+
 }
