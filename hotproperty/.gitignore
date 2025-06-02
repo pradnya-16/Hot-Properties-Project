@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+hotproperty/src/main/resources/application.properties
+hotproperty/src/main/java/edu/finalproject/hotproperty/utils/PasswordChecker.java
+hotproperty/src/main/java/edu/finalproject/hotproperty/utils/PasswordGenerator.java

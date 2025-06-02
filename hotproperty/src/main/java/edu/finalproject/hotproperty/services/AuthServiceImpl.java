@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     @Value("${jwt.expirationMs}")
     private long jwtExpirationMs;
 
-    // ✅ Use @Autowired on the field to inject AuthenticationManager from Spring context
+
 
     public AuthServiceImpl(JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
@@ -56,11 +56,11 @@ public class AuthServiceImpl implements AuthService {
             jwtCookie.setPath("/");
             jwtCookie.setMaxAge((int) (jwtExpirationMs / 1000));
 
-            log.info("✅ User {} logged in successfully. JWT cookie created.", userDetails.getUsername());
+            log.info("User {} logged in successfully. JWT cookie created.", userDetails.getUsername());
             return jwtCookie;
 
         } catch (AuthenticationException e) {
-            log.warn("⚠️ Login failed for email {}: {}", loginRequestDto.getEmail(), e.getMessage());
+            log.warn("Login failed for email {}: {}", loginRequestDto.getEmail(), e.getMessage());
             throw new BadCredentialsException("Invalid email or password");
         }
     }
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         SecurityContextHolder.clearContext();
-        log.info("🔒 User logged out. JWT cookie cleared.");
+        log.info("User logged out. JWT cookie cleared.");
     }
 
     @Override

@@ -46,7 +46,7 @@ public class SecurityConfig {
     return authProvider;
   }
 
-  // ✅ Add this missing AuthenticationManager bean
+
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
     return config.getAuthenticationManager();
