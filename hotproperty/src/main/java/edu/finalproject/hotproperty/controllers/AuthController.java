@@ -78,6 +78,7 @@ public class AuthController {
         return "auth/register";
     }
 
+    //Forgot - no DTO's on request, only responses. Need to refactor.
     @PostMapping("/login")
     public String loginUser(@ModelAttribute("loginRequestDto") LoginRequestDto loginRequestDto,
                             BindingResult bindingResult,
@@ -100,7 +101,7 @@ public class AuthController {
             return "auth/login";
         }
     }
-
+//Forgot - no DTO's on request, only responses. Need to refactor.
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("userRegistrationDto") UserRegistrationDto registrationDto,
                                BindingResult bindingResult,
