@@ -3,8 +3,6 @@ package edu.finalproject.hotproperty.controllers;
 
 import edu.finalproject.hotproperty.dtos.LoginRequestDto;
 import edu.finalproject.hotproperty.dtos.UserRegistrationDto;
-import edu.finalproject.hotproperty.entities.User;
-import edu.finalproject.hotproperty.entities.enums.RoleType;
 import edu.finalproject.hotproperty.exceptions.InvalidUserParameterException;
 import edu.finalproject.hotproperty.services.AuthService;
 import edu.finalproject.hotproperty.services.UserService;
@@ -16,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

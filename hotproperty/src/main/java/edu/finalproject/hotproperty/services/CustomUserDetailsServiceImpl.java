@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Collections;
 
+//Used for authentication! 
 @Service
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
