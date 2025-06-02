@@ -54,16 +54,6 @@ public class BuyerController {
   @PreAuthorize("hasRole('BUYER')")
   @GetMapping("/messages/buyer")
   public String viewMessages(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-    User buyer = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userDetails.getUsername()));
-    List<Message> messages = messageRepository.findBySender(buyer); 
-    model.addAttribute("messages", messages);
-    return "/buyer/view_messages";
-  }
-
-  @PreAuthorize("hasRole('BUYER')")
-  @GetMapping("/messages/buyer")
-  public String viewMessages(@AuthenticationPrincipal UserDetails userDetails, Model model) {
       User buyer = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
       List<Message> messages = messageRepository.findBySender(buyer);
       model.addAttribute("messages", messages);
