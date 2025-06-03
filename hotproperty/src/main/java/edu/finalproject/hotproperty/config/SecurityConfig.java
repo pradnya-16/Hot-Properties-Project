@@ -62,9 +62,11 @@ public class SecurityConfig {
             .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**", "/js/**", "/webjars/**",
                 "/error")
             .permitAll()
-            .requestMatchers("/admin/**").hasRole("ADMIN")
-            .requestMatchers("/agent/**").hasRole("AGENT")
-            .requestMatchers("/buyer/**").hasRole("BUYER")
+            .requestMatchers("/users/admin/**").hasRole("ADMIN") 
+            .requestMatchers("/agent/**", "/properties/add", "/properties/manage/**", "/properties/edit/**")
+            .hasRole("AGENT") 
+            .requestMatchers("/buyer/**", "/favorites", "/messages/buyer", "/properties/list", "/properties/view/**")
+            .hasRole("BUYER") 
             .anyRequest().authenticated())
         .logout(logout -> logout
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
