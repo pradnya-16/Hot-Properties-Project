@@ -59,4 +59,9 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
   @Query("SELECT p FROM Property p WHERE p.agent = :agent")
   List<Property> findWithImagesByAgent(@Param("agent") User agent);
 
+  @EntityGraph(attributePaths = {"agent", "images"})
+  @Query("SELECT p FROM Property p WHERE p.id = :id")
+  Optional<Property> findWithAgentAndImagesById(@Param("id") Long id);
+
+
 }
