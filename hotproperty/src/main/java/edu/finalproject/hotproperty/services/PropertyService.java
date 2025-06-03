@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface PropertyService {
     List<Property> getPropertiesByAgent(User agent);
     void deleteProperty(Long propertyId, User agent);
+
+    List<Property> filterProperties(String zip, Integer minSqFt, Double minPrice, Double maxPrice, String sortBy);
+    Property findWithImagesById(Long id);
 }
