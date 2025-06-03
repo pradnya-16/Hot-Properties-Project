@@ -44,6 +44,7 @@ public class PropertyServiceImpl implements PropertyService {
             throw new RuntimeException("Unauthorized to delete this property.");
         }
         propertyRepository.delete(property);
+  }
 
     @Override
     public Property findWithImagesById(Long id) {
