@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +28,7 @@ import java.util.List;
 @Controller
 public class AgentController {
 
+  private static final Logger log = LoggerFactory.getLogger(AgentController.class);
   private final PropertyRepository propertyRepository;
   private final UserRepository userRepository;
   private final PropertyImageRepository propertyImageRepository;
@@ -46,13 +49,16 @@ public class AgentController {
     return "agent/add_properties";
   }
 
-    @GetMapping("/properties/manage")
+  @GetMapping("/properties/manage")
   @PreAuthorize("hasRole('AGENT')")
   public String manageListings(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-    
+
     var currentAgent = userRepository.findByEmail(userDetails.getUsername())
         .orElseThrow(() -> new RuntimeException("Agent user not found: " + userDetails.getUsername()));
-    List<Property> properties = propertyRepository.findWithImagesByAgent(currentAgent); // changed this because we only want to fetch properties specific to the agent, not all properties! 
+    List<Property> properties = propertyRepository.findWithImagesByAgent(currentAgent); // changed this because we only
+                                                                                        // want to fetch properties
+                                                                                        // specific to the agent, not
+                                                                                        // all properties!
     model.addAttribute("properties", properties);
     return "agent/manage_properties";
   }
@@ -125,11 +131,23 @@ public class AgentController {
 
   @PostMapping("/properties/manage/delete/{propertyId}")
   @PreAuthorize("hasRole('AGENT')")
-  public String deleteProperty(@PathVariable Long propertyId, @AuthenticationPrincipal UserDetails userDetails) {
-    var agent = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new RuntimeException("Agent not found"));
-
-    propertyService.deleteProperty(propertyId, agent);
+  public String deleteProperty(@PathVariable Long propertyId,
+      @AuthenticationPrincipal UserDetails userDetails
+      ) {
+    String agentUsername = userDetails.getUsername();
+    log.info("Agent {} attempting to delete property with ID: {}", agentUsername, propertyId);
+    try {
+      var agent = userRepository.findByEmail(agentUsername)
+          .orElseThrow(() -> {
+            log.error("Agent user '{}' not found in database during delete operation for property ID {}.",
+                agentUsername, propertyId);
+            return new UsernameNotFoundException("Agent not found: " + agentUsername);
+          });
+      propertyService.deleteProperty(propertyId, agent);
+      log.info("Property with ID {} deleted successfully by agent {}.", propertyId, agentUsername);
+    } catch (RuntimeException e) {
+      log.error("Error deleting property ID {} for agent {}: {}", propertyId, agentUsername, e.getMessage(), e);
+    }
     return "redirect:/properties/manage";
   }
 
