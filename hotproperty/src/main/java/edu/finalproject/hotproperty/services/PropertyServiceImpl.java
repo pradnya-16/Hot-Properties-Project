@@ -24,7 +24,7 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public Property findWithImagesById(Long id) {
-        return propertyRepository.findWithImagesById(id);
+        return propertyRepository.findWithImagesById(id).orElseThrow();
     }
 
     @Override
