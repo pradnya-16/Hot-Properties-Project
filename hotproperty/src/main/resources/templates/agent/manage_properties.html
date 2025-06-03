@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta charset="UTF-8" />
+  <title>Manage My Properties</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
-$END$
+<body class="home-background">
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="browse-properties-container">
+  <h2 style="text-align: center">Manage Your Properties</h2>
+
+  <div th:if="${properties.isEmpty()}">
+    <p style="text-align:center;">No properties listed yet.</p>
+  </div>
+
+  <div class="property-list" th:each="property : ${properties}">
+    <div class="property-card">
+      <div class="property-image" th:if="${property.images != null and #lists.size(property.images) > 0}">
+        <img th:src="@{'/PropertyImages/' + ${property.title} + '/' + ${property.images[0].imageFileName}}" alt="Image">
+      </div>
+
+      <div class="property-info">
+        <h3 th:text="${property.title}">Property Title</h3>
+        <p><strong>Price:</strong> $<span th:text="${property.price}"></span></p>
+        <p><strong>Location:</strong> <span th:text="${property.location}"></span></p>
+        <p><strong>Size:</strong> <span th:text="${property.size}"></span> sq ft</p>
+
+        <div class="button-group">
+          <a th:href="@{/properties/edit/{id}(id=${property.id})}" class="filter-btn filter-btn-primary">Edit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

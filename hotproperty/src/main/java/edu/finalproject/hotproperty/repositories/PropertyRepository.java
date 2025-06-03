@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
@@ -18,7 +19,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
   List<Property> findAll();
 
   @EntityGraph(attributePaths = "images")
-  Property findWithImagesById(Long id);
+  Optional<Property> findWithImagesById(Long id);
 
 
   @EntityGraph(attributePaths = "images")
@@ -53,4 +54,9 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
           @Param("minPrice") Double minPrice,
           @Param("maxPrice") Double maxPrice
   );
+
+  @EntityGraph(attributePaths = "images")
+  @Query("SELECT p FROM Property p WHERE p.agent = :agent")
+  List<Property> findWithImagesByAgent(@Param("agent") User agent);
+
 }
