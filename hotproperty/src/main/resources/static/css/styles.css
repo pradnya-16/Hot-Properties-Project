@@ -452,6 +452,8 @@ body {
   height: 100px;
   margin-bottom: 15px;
   font-size: 14px;
+  resize: vertical;
+  box-sizing: border-box
 }
 
 .send-message-btn {
