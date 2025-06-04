@@ -3,11 +3,11 @@ package edu.finalproject.hotproperty.repositories;
 import edu.finalproject.hotproperty.entities.Favorite;
 import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
@@ -17,5 +17,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
   boolean existsByBuyerAndProperty(User buyer, Property property);
 
-  void deleteByBuyerAndProperty(User buyer, Property property); // for removing favorite
+  @Transactional
+  void deleteByBuyerAndProperty(User buyer, Property property);
 }

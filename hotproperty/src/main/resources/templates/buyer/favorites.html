@@ -1,10 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
+<!doctype html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Saved Favorites</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body class="home-background">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="browse-properties-container" style="padding-top: 20px">
+      <h2 style="text-align: center; margin-bottom: 20px">
+        My Saved Favorites
+      </h2>
+
+      <div
+        th:if="${successMessage}"
+        class="alert alert-success"
+        th:text="${successMessage}"
+      ></div>
+      <div
+        th:if="${errorMessage}"
+        class="alert alert-danger"
+        th:text="${errorMessage}"
+      ></div>
+
+      <div th:if="${favorites == null || favorites.isEmpty()}">
+        <p style="text-align: center">
+          You have no saved favorite properties yet.
+        </p>
+        <p style="text-align: center; margin-top: 20px">
+          <a th:href="@{/properties/list}" class="btn btn-primary"
+            >Browse Properties</a
+          >
+        </p>
+      </div>
+
+      <div
+        th:unless="${favorites == null || favorites.isEmpty()}"
+        class="property-list"
+      >
+        <div
+          class="property-card"
+          th:each="fav : ${favorites}"
+          th:with="property=${fav.property}"
+        >
+          <div class="property-image">
+            <a th:href="@{/properties/view/{id}(id=${property.id})}">
+              <img
+                th:if="${property.images != null and not #lists.isEmpty(property.images)}"
+                th:src="@{'/PropertyImages/' + ${property.title} + '/' + ${property.images[0].imageFileName}}"
+                alt="Property Image"
+              />
+              <img
+                th:if="${property.images == null or #lists.isEmpty(property.images)}"
+                th:src="@{/images/default-property.png}"
+                alt="No Image Available"
+                style="
+                  width: 250px;
+                  height: 160px;
+                  object-fit: cover;
+                  border-radius: 5px;
+                  border: 1px solid #ddd;
+                "
+              />
+            </a>
+          </div>
+
+          <div class="property-info">
+            <h3 style="color: #16b5e0">
+              <a
+                th:href="@{/properties/view/{id}(id=${property.id})}"
+                th:text="${property.title}"
+                style="color: #16b5e0; text-decoration: none"
+                >Property Title</a
+              >
+            </h3>
+            <p>
+              <strong>Price:</strong> $<span
+                th:text="${#numbers.formatDecimal(property.price, 0, 'COMMA', 0, 'POINT')}"
+              ></span>
+            </p>
+            <p>
+              <strong>Location:</strong>
+              <span th:text="${property.location}"></span>
+            </p>
+            <p>
+              <strong>Sq. Ft.:</strong> <span th:text="${property.size}"></span>
+            </p>
+
+            <div
+              class="button-group"
+              style="
+                flex-direction: row;
+                gap: 10px;
+                margin-top: 10px;
+                justify-content: flex-start;
+                align-items: center;
+              "
+            >
+              <a
+                class="btn btn-primary"
+                th:href="@{/properties/view/{id}(id=${property.id})}"
+                >View Details</a
+              >
+              <form
+                th:action="@{/favorites/remove/{id}(id=${property.id})}"
+                method="post"
+                style="display: inline; margin: 0"
+              >
+                <button type="submit" class="btn btn-secondary">
+                  Remove Favorite
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 30px">
+        <a th:href="@{/dashboard}" class="btn btn-primary"
+          >🡸 Back to Dashboard</a
+        >
+      </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </body>
 </html>
