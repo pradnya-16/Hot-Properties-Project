@@ -2,10 +2,12 @@ package edu.finalproject.hotproperty.services;
 
 import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.User;
+import edu.finalproject.hotproperty.exceptions.InvalidPropertyImageParameterException;
 import edu.finalproject.hotproperty.repositories.PropertyRepository;
 import edu.finalproject.hotproperty.exceptions.InvalidPropertyParameterException;
 import edu.finalproject.hotproperty.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -18,18 +20,19 @@ import java.util.List;
 public class PropertyServiceImpl implements PropertyService {
 
     private final PropertyRepository propertyRepository;
-    private final UserRepository userRepository;
   
     private static final Logger log = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
     @Autowired
-    public PropertyServiceImpl(PropertyRepository propertyRepository, UserRepository userRepository) {
+    public PropertyServiceImpl(PropertyRepository propertyRepository) {
         this.propertyRepository = propertyRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
     public List<Property> getPropertiesByAgent(User agent) {
+        if (agent == null) {
+            throw new UsernameNotFoundException("Agent cannot be null for getting properties.");
+        }
         return propertyRepository.findByAgent(agent);
     }
 
@@ -48,7 +51,12 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public Property findWithImagesById(Long id) {
-        return propertyRepository.findWithImagesById(id).orElseThrow();
+        return propertyRepository.findWithImagesById(id).orElseThrow(
+                () -> {
+                    log.warn("Cannot find property image with id: {}", id);
+                    return new InvalidPropertyImageParameterException(
+                            "Cannot find property image with id:" + id);
+                });
     }
 
     @Override

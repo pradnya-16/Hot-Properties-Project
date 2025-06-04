@@ -6,6 +6,8 @@ import edu.finalproject.hotproperty.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class UserInitializer {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+
+  private static final Logger log = LoggerFactory.getLogger(UserInitializer.class);
 
   @Autowired
   public UserInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -37,7 +41,7 @@ public class UserInitializer {
       userRepository.save(agent2);
       userRepository.save(buyer);
 
-      System.out.println("Sample users initialized.");
+      log.info("Sample users initialized.");
     }
   }
 }

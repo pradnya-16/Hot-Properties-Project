@@ -169,9 +169,11 @@ public class BuyerController {
         boolean isFavorite = favoriteService.isPropertyFavorite(buyer, id);
         model.addAttribute("isFavorite", isFavorite);
       } else {
+        log.warn("Authenticated userDetails present but no matching buyer found: {}", userDetails.getUsername());
         model.addAttribute("isFavorite", false);
       }
     } else {
+      log.warn("No authenticated userDetails found when accessing property details for property ID: {}", id);
       model.addAttribute("isFavorite", false);
     }
     return "/buyer/property_details_view";
