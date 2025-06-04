@@ -2,7 +2,6 @@ package edu.finalproject.hotproperty.config;
 
 import edu.finalproject.hotproperty.services.CustomUserDetailsService;
 import edu.finalproject.hotproperty.utils.JwtAuthenticationFilter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,14 +24,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-  @Autowired
-  private CustomUserDetailsService customUserDetailsService;
+  @Autowired private CustomUserDetailsService customUserDetailsService;
 
-  @Autowired
-  private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @Autowired private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-  @Autowired
-  private CustomAuthenticationEntryPoint unauthorizedHandler;
+  @Autowired private CustomAuthenticationEntryPoint unauthorizedHandler;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -48,37 +44,61 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
+      throws Exception {
     return authConfig.getAuthenticationManager();
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(AbstractHttpConfigurer::disable)
+    http.csrf(AbstractHttpConfigurer::disable)
         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/images/**", "/js/**", "/webjars/**",
-                "/error")
-            .permitAll()
-            .requestMatchers("/users/admin/**").hasRole("ADMIN") 
-            .requestMatchers("/agent/**", "/properties/add", "/properties/manage/**", "/properties/edit/**")
-            .hasRole("AGENT") 
-            .requestMatchers("/buyer/**", "/favorites", "/messages/buyer", "/properties/list", "/properties/view/**")
-            .hasRole("BUYER") 
-            .anyRequest().authenticated())
-        .logout(logout -> logout
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/login?logout")
-            .invalidateHttpSession(true)
-            .deleteCookies("jwtTokenHotProperties")
-            .permitAll());
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        "/",
+                        "/home",
+                        "/login",
+                        "/register",
+                        "/css/**",
+                        "/images/**",
+                        "/js/**",
+                        "/webjars/**",
+                        "/error",
+                        "/PropertyImages/**")
+                    .permitAll()
+                    .requestMatchers("/users/admin/**")
+                    .hasRole("ADMIN")
+                    .requestMatchers(
+                        "/agent/**",
+                        "/properties/add",
+                        "/properties/manage/**",
+                        "/properties/edit/**")
+                    .hasRole("AGENT")
+                    .requestMatchers(
+                        "/buyer/**",
+                        "/favorites",
+                        "/favorites/**",
+                        "/messages/buyer",
+                        "/properties/list",
+                        "/properties/view/**")
+                    .hasRole("BUYER")
+                    .anyRequest()
+                    .authenticated())
+        .logout(
+            logout ->
+                logout
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/login?logout")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("jwtTokenHotProperties")
+                    .permitAll());
 
     http.authenticationProvider(authenticationProvider());
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
-
 }
