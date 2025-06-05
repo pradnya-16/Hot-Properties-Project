@@ -19,7 +19,7 @@
 
         <div class="form-group">
             <label for="price">Price ($):</label>
-            <input type="number" id="price" name="price" step="0.01" class="form-control" required />
+            <input type="number" id="price" name="price" step="0.01" min="0" max="9999999999" class="form-control" required />
         </div>
 
         <div class="form-group">
@@ -29,7 +29,7 @@
 
         <div class="form-group">
             <label for="size">Size (sq ft):</label>
-            <input type="number" id="size" name="size" class="form-control" required />
+            <input type="number" id="size" name="size" min="0" max="9999999999" class="form-control" required />
         </div>
 
         <div class="form-group">
@@ -39,7 +39,7 @@
 
         <div class="form-group">
             <label for="image">Upload Property Images:</label>
-            <input type="file" id="image" name="image" class="form-control-file" />
+            <input type="file" id="image" name="image" class="form-control-file" accept="image/*" multiple />
         </div>
 
         <div class="button-row">
@@ -47,6 +47,7 @@
             <a th:href="@{/dashboard}" class="btn btn-primary">Back to Dashboard</a>
         </div>
     </form>
+
 </div>
 
 </body>

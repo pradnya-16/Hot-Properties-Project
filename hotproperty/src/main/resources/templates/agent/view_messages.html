@@ -1,10 +1,30 @@
+<!-- templates/agent/view_message.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta charset="UTF-8" />
+  <title>View Message</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
-$END$
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+  <h2>Message Details</h2>
+
+  <p><strong>From:</strong> <span th:text="${message.sender.email}"></span></p>
+  <p><strong>Property:</strong> <span th:text="${message.property.title}"></span></p>
+  <p><strong>Message:</strong></p>
+  <p th:text="${message.content}"></p>
+
+  <h3>Reply</h3>
+  <form th:action="@{'/messages/agent/' + ${message.id} + '/reply'}" method="post">
+        <textarea name="reply" rows="4" class="form-control" required
+                  th:text="${message.reply}"></textarea><br/>
+    <button type="submit" class="btn btn-success">Send Reply</button>
+  </form>
+
+  <br>
+  <a th:href="@{/agent/messages}" class="btn btn-secondary">Back</a>
+</div>
 </body>
 </html>

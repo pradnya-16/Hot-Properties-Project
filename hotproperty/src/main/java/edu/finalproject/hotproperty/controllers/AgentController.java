@@ -2,6 +2,7 @@ package edu.finalproject.hotproperty.controllers;
 
 import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.PropertyImage;
+import edu.finalproject.hotproperty.repositories.MessageRepository;
 import edu.finalproject.hotproperty.repositories.PropertyImageRepository;
 import edu.finalproject.hotproperty.repositories.PropertyRepository;
 import edu.finalproject.hotproperty.repositories.UserRepository;
@@ -33,14 +34,16 @@ public class AgentController {
   private final UserRepository userRepository;
   private final PropertyImageRepository propertyImageRepository;
   private final PropertyService propertyService;
+  private final MessageRepository messageRepository;
 
   @Autowired
   public AgentController(PropertyRepository propertyRepository, UserRepository userRepository,
-      PropertyImageRepository propertyImageRepository, PropertyService propertyService) {
+      PropertyImageRepository propertyImageRepository, PropertyService propertyService, MessageRepository messageRepository) {
     this.propertyRepository = propertyRepository;
     this.userRepository = userRepository;
     this.propertyImageRepository = propertyImageRepository;
     this.propertyService = propertyService;
+    this.messageRepository = messageRepository;
   }
 
   @GetMapping("/properties/add")
@@ -55,10 +58,8 @@ public class AgentController {
 
     var currentAgent = userRepository.findByEmail(userDetails.getUsername())
         .orElseThrow(() -> new RuntimeException("Agent user not found: " + userDetails.getUsername()));
-    List<Property> properties = propertyRepository.findWithImagesByAgent(currentAgent); // changed this because we only
-                                                                                        // want to fetch properties
-                                                                                        // specific to the agent, not
-                                                                                        // all properties!
+    List<Property> properties = propertyRepository.findWithImagesByAgent(currentAgent);
+
     model.addAttribute("properties", properties);
     return "agent/manage_properties";
   }
@@ -149,6 +150,46 @@ public class AgentController {
       log.error("Error deleting property ID {} for agent {}: {}", propertyId, agentUsername, e.getMessage(), e);
     }
     return "redirect:/properties/manage";
+
   }
+
+  @GetMapping("/messages/agent")
+  @PreAuthorize("hasRole('AGENT')")
+  public String viewAllMessages(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    var agent = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("Agent not found"));
+    var messages = messageRepository.findByProperty_Agent(agent);
+    model.addAttribute("messages", messages);
+    return "agent/view_all_messages";
+  }
+
+
+  @GetMapping("/messages/agent/{id}")
+  @PreAuthorize("hasRole('AGENT')")
+  public String viewMessage(@PathVariable Long id, Model model) {
+    var message = messageRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Message not found"));
+    model.addAttribute("message", message);
+    return "agent/view_message";
+  }
+
+  @PostMapping("/messages/agent/{id}/reply")
+  @PreAuthorize("hasRole('AGENT')")
+  public String replyToMessage(@PathVariable Long id,
+                               @RequestParam String reply) {
+    var message = messageRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Message not found"));
+    message.setReply(reply);
+    messageRepository.save(message);
+    return "redirect:/agent/messages";
+  }
+
+  @PostMapping("/messages/agent/{id}/delete")
+  @PreAuthorize("hasRole('AGENT')")
+  public String deleteMessage(@PathVariable Long id) {
+    messageRepository.deleteById(id);
+    return "redirect:/agent/messages";
+  }
+
 
 }
