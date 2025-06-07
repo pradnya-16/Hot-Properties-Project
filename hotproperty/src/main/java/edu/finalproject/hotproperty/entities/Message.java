@@ -24,6 +24,11 @@ public class Message {
   @JoinColumn(name = "sender_id", nullable = false)
   private User sender;
 
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "receiver_id", nullable = false)
+  private User receiver;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "property_id", nullable = false)
   private Property property;
@@ -83,6 +88,13 @@ public class Message {
     this.sender = sender;
   }
 
+  public User getReceiver() {
+    return receiver;
+  }
+
+  public void setReceiver(User receiver) {
+    this.receiver = receiver;
+  }
   public Property getProperty() {
     return property;
   }

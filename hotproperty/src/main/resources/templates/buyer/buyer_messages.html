@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Messages</title>
+</head>
+<body>
+<h2>My Sent Messages</h2>
+
+<table border="1">
+    <tr>
+        <th>Receiver (Agent)</th>
+        <th>Property</th>
+        <th>Message</th>
+        <th>Timestamp</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="message : ${messages}">
+        <td th:text="${message.receiver.firstName}"></td>
+        <td th:text="${message.property.title}"></td>
+        <td th:text="${message.content}"></td>
+        <td th:text="${#temporals.format(message.timestamp, 'yyyy-MM-dd HH:mm')}"></td>
+        <td>
+            <form th:action="@{'/messages/delete/' + ${message.id}}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<a href="/properties/list">Back to Browse</a>
+</body>
+</html>
+
