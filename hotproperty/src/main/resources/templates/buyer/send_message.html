@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Send Message</title>
+</head>
+<body>
+<h2>Send Message to Agent</h2>
+
+<form th:action="@{'/messages/send/' + ${propertyId}}" method="post">
+    <textarea name="content" rows="5" cols="50" required></textarea><br><br>
+    <button type="submit">Send Message</button>
+</form>
+
+<a th:href="@{'/properties/view/' + ${propertyId}}">Back to Property</a>
+</body>
+</html>

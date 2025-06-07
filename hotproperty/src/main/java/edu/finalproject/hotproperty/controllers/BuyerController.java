@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import edu.finalproject.hotproperty.entities.Message;
+import edu.finalproject.hotproperty.services.BuyerMessageService;
+import edu.finalproject.hotproperty.exceptions.InvalidMessageParameterException;
 
 @Controller
 public class BuyerController {
@@ -35,17 +38,19 @@ public class BuyerController {
   private final PropertyService propertyService;
   private final UserRepository userRepository;
   private final FavoriteService favoriteService;
-
+  private final BuyerMessageService buyerMessageService;
   @Autowired
   public BuyerController(
       BuyerService buyerService,
       PropertyService propertyService,
       UserRepository userRepository,
-      FavoriteService favoriteService) {
+      FavoriteService favoriteService,
+      BuyerMessageService buyerMessageService) {
     this.buyerService = buyerService;
     this.propertyService = propertyService;
     this.userRepository = userRepository;
     this.favoriteService = favoriteService;
+    this.buyerMessageService = buyerMessageService;
   }
 
   @PreAuthorize("hasRole('BUYER')")
@@ -122,16 +127,66 @@ public class BuyerController {
     return "redirect:" + (referer != null ? referer : "/properties/view/" + propertyId);
   }
 
+
+
   @PreAuthorize("hasRole('BUYER')")
-  @GetMapping("/messages/buyer")
-  public String viewMessages(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+  @GetMapping("/messages/send/{propertyId}")
+  public String showSendMessageForm(@PathVariable Long propertyId, Model model) {
+    model.addAttribute("propertyId", propertyId);
+    return "buyer/send_message";
+  }
+
+  @PreAuthorize("hasRole('BUYER')")
+  @PostMapping("/messages/send/{propertyId}")
+  public String sendMessage(
+          @PathVariable Long propertyId,
+          @RequestParam("content") String content,
+          @AuthenticationPrincipal UserDetails userDetails,
+          RedirectAttributes redirectAttributes) {
+
     User buyer = buyerService.findByEmail(userDetails.getUsername());
 
-    // TODO: implement favorite feature, create messageService, messageServiceImpl etc
-    //      List<Message> messages = messageRepository.findBySender(buyer);
-    //      model.addAttribute("messages", messages);
-    return "/buyer/view_messages";
+    try {
+      buyerMessageService.sendMessage(buyer, propertyId, content);
+      redirectAttributes.addFlashAttribute("successMessage", "Message sent successfully.");
+    } catch (InvalidMessageParameterException e) {
+      redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+    } catch (Exception e) {
+      log.error("Error sending message for property {}: {}", propertyId, e.getMessage(), e);
+      redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while sending message.");
+    }
+    return "redirect:/properties/view/" + propertyId;
   }
+
+  @PreAuthorize("hasRole('BUYER')")
+  @GetMapping("/messages/inbox")
+  public String viewBuyerMessages(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    User buyer = buyerService.findByEmail(userDetails.getUsername());
+    List<Message> messages = buyerMessageService.getBuyerMessages(buyer);
+    model.addAttribute("messages", messages);
+    return "buyer/buyer_messages";
+  }
+
+  @PreAuthorize("hasRole('BUYER')")
+  @PostMapping("/messages/delete/{messageId}")
+  public String deleteMessage(
+          @PathVariable Long messageId,
+          @AuthenticationPrincipal UserDetails userDetails,
+          RedirectAttributes redirectAttributes) {
+
+    User buyer = buyerService.findByEmail(userDetails.getUsername());
+    try {
+      buyerMessageService.deleteMessage(buyer, messageId);
+      redirectAttributes.addFlashAttribute("successMessage", "Message deleted successfully.");
+    } catch (InvalidMessageParameterException e) {
+      redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+    } catch (Exception e) {
+      log.error("Error deleting message {}: {}", messageId, e.getMessage(), e);
+      redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while deleting message.");
+    }
+    return "redirect:/messages/inbox";
+  }
+
 
   @PreAuthorize("hasRole('BUYER')")
   @GetMapping("/properties/list")
@@ -179,3 +234,20 @@ public class BuyerController {
     return "/buyer/property_details_view";
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
