@@ -81,19 +81,16 @@
       </div>
       <h2><strong>Contact the Agent</strong></h2>
 
-      <p>Your Message:</p>
-      <div>
-        <textarea class="message-input-box" name="messageText"></textarea>
-      </div>
+      <form th:action="@{'/messages/send/' + ${property.id}}" method="post">
+        <p>Your Message:</p>
+        <div>
+          <textarea class="message-input-box" name="content" required></textarea>
+        </div>
+        <div style="margin-top: 10px">
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </div>
+      </form>
 
-      <div>
-        <!--TODO: send message functionality-->
-        <a
-          th:href="@{/properties/view/{id}(id=${property.id})}"
-          class="send-message-btn"
-          >Send Message</a
-        >
-      </div>
       <div style="margin-top: 20px">
         <a th:href="@{/properties/list}" class="btn btn-primary"
           >← Back to Listings</a
