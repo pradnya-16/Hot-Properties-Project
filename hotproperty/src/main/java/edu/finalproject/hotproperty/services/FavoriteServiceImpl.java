@@ -8,7 +8,6 @@ import edu.finalproject.hotproperty.exceptions.InvalidPropertyParameterException
 import edu.finalproject.hotproperty.repositories.FavoriteRepository;
 import edu.finalproject.hotproperty.repositories.PropertyRepository;
 import java.util.List;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +38,6 @@ public class FavoriteServiceImpl implements FavoriteService {
       throw new UsernameNotFoundException("Buyer cannot be null.");
     }
     List<Favorite> favorites = favoriteRepository.findByBuyer(buyer);
-    // must init for lazy loading
-    for (Favorite favorite : favorites) {
-      Property property = favorite.getProperty();
-      if (property != null) {
-        Hibernate.initialize(property);
-        Hibernate.initialize(property.getImages());
-        Hibernate.initialize(property.getAgent());
-      }
-    }
     return favorites;
   }
 

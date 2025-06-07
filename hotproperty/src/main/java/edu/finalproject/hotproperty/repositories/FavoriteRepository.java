@@ -5,6 +5,7 @@ import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.User;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
   Optional<Favorite> findByBuyerAndProperty(User buyer, Property property);
 
+  @EntityGraph(attributePaths = {"property", "property.images", "property.agent"})
   List<Favorite> findByBuyer(User buyer);
 
   boolean existsByBuyerAndProperty(User buyer, Property property);
