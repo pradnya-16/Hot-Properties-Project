@@ -11,6 +11,7 @@
         <th>Receiver (Agent)</th>
         <th>Property</th>
         <th>Message</th>
+        <th>Agent Reply</th>
         <th>Timestamp</th>
         <th>Action</th>
     </tr>
@@ -18,6 +19,7 @@
         <td th:text="${message.receiver.firstName}"></td>
         <td th:text="${message.property.title}"></td>
         <td th:text="${message.content}"></td>
+        <td th:text="${message.reply != null ? message.reply : 'No reply yet'}"></td>
         <td th:text="${#temporals.format(message.timestamp, 'yyyy-MM-dd HH:mm')}"></td>
         <td>
             <form th:action="@{'/messages/delete/' + ${message.id}}" method="post">
