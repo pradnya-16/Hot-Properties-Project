@@ -21,6 +21,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
   @EntityGraph(attributePaths = "images")
   Optional<Property> findWithImagesById(Long id);
 
+  boolean existsByTitle(String title);
 
   @EntityGraph(attributePaths = "images")
   @Query("""
