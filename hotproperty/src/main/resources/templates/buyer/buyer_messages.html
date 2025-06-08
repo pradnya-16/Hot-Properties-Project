@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>My Messages</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
+<body class="home-background">
+<div class="property-detail-container">
 <h2>My Sent Messages</h2>
 
-<table border="1">
+    <table class="buyer-messages-table">
     <tr>
         <th>Receiver (Agent)</th>
         <th>Property</th>
@@ -21,13 +23,16 @@
         <td th:text="${#temporals.format(message.timestamp, 'yyyy-MM-dd HH:mm')}"></td>
         <td>
             <form th:action="@{'/messages/delete/' + ${message.id}}" method="post">
-                <button type="submit">Delete</button>
+                <button type="submit" class="btn btn-secondary">Delete</button>
             </form>
         </td>
     </tr>
 </table>
 
-<a href="/properties/list">Back to Browse</a>
+    <div style="margin-top: 20px">
+        <a th:href="@{/dashboard}" class="btn btn-primary">← Back to Dashboard</a>
+    </div>
+</div>
 </body>
 </html>
 

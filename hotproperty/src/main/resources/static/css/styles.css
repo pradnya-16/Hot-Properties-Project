@@ -695,3 +695,36 @@ body {
   color: #adb5bd;
 }
 
+
+
+
+
+
+/* --------------------------------------------------
+  Table Styling (for Buyer Messages)
+-------------------------------------------------- */
+.buyer-messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.buyer-messages-table th, .buyer-messages-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.buyer-messages-table th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.buyer-messages-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.buyer-messages-table tr:hover {
+  background-color: #f1f1f1;
+}
+
