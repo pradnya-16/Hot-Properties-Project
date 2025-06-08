@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
@@ -19,4 +20,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
   @EntityGraph(attributePaths = {"property", "sender"})
   List<Message> findByProperty_Agent(User agent);
+
+  @EntityGraph(attributePaths = {"sender", "property"})
+  Optional<Message> findWithSenderAndPropertyById(Long id);
+
 }

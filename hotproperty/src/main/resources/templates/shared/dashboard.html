@@ -21,7 +21,7 @@
     <div th:if="${user.role.name() == 'BUYER'}">
       <a th:href="@{/properties/list}" class="dashboard-link">Browse Properties</a><br>
       <a th:href="@{/favorites}" class="dashboard-link">Saved Favorites</a><br>
-      <a th:href="@{/messages/buyer}"class="dashboard-link">View Messages</a><br>
+      <a th:href="@{/messages/inbox}"class="dashboard-link">View Messages</a><br>
     </div>
     <div th:if="${user.role.name() == 'AGENT'}">
 

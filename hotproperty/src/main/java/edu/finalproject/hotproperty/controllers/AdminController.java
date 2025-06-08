@@ -46,7 +46,6 @@ public class AdminController {
   @GetMapping("/create-agent")
   @PreAuthorize("hasRole('ADMIN')")
   public String createAgentForm(Model model) {
-    // for form binding
     if (!model.containsAttribute("userRegistrationDto")) {
       model.addAttribute("userRegistrationDto", new UserRegistrationDto());
     }
