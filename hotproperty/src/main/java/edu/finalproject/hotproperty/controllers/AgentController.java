@@ -1,5 +1,6 @@
 package edu.finalproject.hotproperty.controllers;
 
+import edu.finalproject.hotproperty.entities.Message;
 import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.PropertyImage;
 import edu.finalproject.hotproperty.repositories.MessageRepository;
@@ -167,28 +168,29 @@ public class AgentController {
   @GetMapping("/messages/agent/{id}")
   @PreAuthorize("hasRole('AGENT')")
   public String viewMessage(@PathVariable Long id, Model model) {
-    var message = messageRepository.findById(id)
+    var message = messageRepository.findWithSenderAndPropertyById(id)
             .orElseThrow(() -> new RuntimeException("Message not found"));
+
     model.addAttribute("message", message);
     return "agent/view_message";
   }
 
+
   @PostMapping("/messages/agent/{id}/reply")
   @PreAuthorize("hasRole('AGENT')")
-  public String replyToMessage(@PathVariable Long id,
-                               @RequestParam String reply) {
+  public String replyToMessage(@PathVariable Long id, @RequestParam String reply) {
     var message = messageRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Message not found"));
     message.setReply(reply);
     messageRepository.save(message);
-    return "redirect:/agent/messages";
+    return "redirect:/messages/agent";
   }
 
   @PostMapping("/messages/agent/{id}/delete")
   @PreAuthorize("hasRole('AGENT')")
   public String deleteMessage(@PathVariable Long id) {
     messageRepository.deleteById(id);
-    return "redirect:/agent/messages";
+    return "redirect:/messages/agent";
   }
 
 
