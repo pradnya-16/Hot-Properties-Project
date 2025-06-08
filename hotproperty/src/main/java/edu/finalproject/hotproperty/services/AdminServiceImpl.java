@@ -49,9 +49,12 @@ public class AdminServiceImpl implements AdminService {
     if (user.getRole().name().equals("AGENT")) {
       List<Property> properties = propertyRepository.findByAgent(user);
       propertyRepository.deleteAll(properties);
+      log.info(
+          "Deleted {} properties associated with agent {}", properties.size(), user.getEmail());
     }
 
     userRepository.delete(user);
+    log.info("User with ID {} deleted successfully.", userId);
   }
 
   @Override
