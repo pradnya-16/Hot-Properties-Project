@@ -3,6 +3,9 @@ package edu.finalproject.hotproperty.controllers;
 import edu.finalproject.hotproperty.entities.Message;
 import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.PropertyImage;
+import edu.finalproject.hotproperty.exceptions.InvalidMessageParameterException;
+import edu.finalproject.hotproperty.exceptions.InvalidPropertyParameterException;
+import edu.finalproject.hotproperty.exceptions.InvalidUserParameterException;
 import edu.finalproject.hotproperty.repositories.MessageRepository;
 import edu.finalproject.hotproperty.repositories.PropertyImageRepository;
 import edu.finalproject.hotproperty.repositories.PropertyRepository;
@@ -25,6 +28,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -58,7 +64,14 @@ public class AgentController {
   public String manageListings(@AuthenticationPrincipal UserDetails userDetails, Model model) {
 
     var currentAgent = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new RuntimeException("Agent user not found: " + userDetails.getUsername()));
+        .orElseThrow(
+            () -> {
+              log.warn(
+                      "Attempt to manage properties with agent name: {}",
+                      userDetails.getUsername());
+              return new InvalidUserParameterException(
+                      "User not found with name: " + userDetails.getUsername());
+            });
     List<Property> properties = propertyRepository.findWithImagesByAgent(currentAgent);
 
     model.addAttribute("properties", properties);
@@ -69,7 +82,14 @@ public class AgentController {
   @PreAuthorize("hasRole('AGENT')")
   public String showEditForm(@PathVariable Long id, Model model) {
     Property property = propertyRepository.findWithAgentAndImagesById(id)
-        .orElseThrow(() -> new RuntimeException("Property not found"));
+            .orElseThrow(
+                    () -> {
+                      log.warn(
+                              "Attempt to edit property with id: {}",
+                              id);
+                      return new InvalidPropertyParameterException(
+                              "Property not found with id: " + id);
+                    });
 
     model.addAttribute("property", property);
     return "agent/edit_property";
@@ -78,17 +98,49 @@ public class AgentController {
   @PostMapping("/properties/edit/{id}")
   @PreAuthorize("hasRole('AGENT')")
   public String updateProperty(@PathVariable Long id,
-      @ModelAttribute Property formProperty) {
-    Property property = propertyRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Property not found"));
+                               @ModelAttribute Property formProperty) {
 
-    property.setTitle(formProperty.getTitle());
+    Property property = propertyRepository.findById(id)
+            .orElseThrow(
+                    () -> {
+                      log.warn(
+                              "Attempt to update property with id: {}",
+                              id);
+                      return new InvalidPropertyParameterException(
+                              "Property not found with id: " + id);
+                    });
+
+    String oldTitle = property.getTitle();
+    String newTitle = formProperty.getTitle();
+
+    if (!oldTitle.equals(newTitle)) {
+      boolean exists = propertyRepository.existsByTitle(newTitle);
+      if (exists) {
+        log.warn("Property title already exists.");
+        throw new InvalidPropertyParameterException("Property title already exists.");
+      }
+
+      Path oldFolder = Paths.get("src/main/resources/static/PropertyImages", oldTitle);
+      Path newFolder = Paths.get("src/main/resources/static/PropertyImages", newTitle);
+      try {
+        if (Files.exists(oldFolder)) {
+          Files.move(oldFolder, newFolder, StandardCopyOption.REPLACE_EXISTING);
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+        log.warn("Failed to rename image folder.");
+        throw new InvalidPropertyParameterException("Failed to rename image folder.");
+      }
+    }
+
+    property.setTitle(newTitle);
     property.setLocation(formProperty.getLocation());
     property.setPrice(formProperty.getPrice());
     property.setSize(formProperty.getSize());
     property.setDescription(formProperty.getDescription());
 
     propertyRepository.save(property);
+    log.info("Property updated successfully.");
     return "redirect:/properties/manage";
   }
 
@@ -103,7 +155,14 @@ public class AgentController {
       @AuthenticationPrincipal UserDetails userDetails) throws IOException {
 
     var agent = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new RuntimeException("Agent not found"));
+            .orElseThrow(
+                    () -> {
+                      log.warn(
+                              "Attempt to add properties with agent name: {}",
+                              userDetails.getUsername());
+                      return new InvalidUserParameterException(
+                              "User not found with name: " + userDetails.getUsername());
+                    });
 
     Property property = new Property();
     property.setTitle(title);
@@ -131,34 +190,52 @@ public class AgentController {
     return "redirect:/properties/manage";
   }
 
-  @PostMapping("/properties/manage/delete/{propertyId}")
+  @PostMapping("/properties/delete/{id}")
   @PreAuthorize("hasRole('AGENT')")
-  public String deleteProperty(@PathVariable Long propertyId,
-      @AuthenticationPrincipal UserDetails userDetails
-      ) {
-    String agentUsername = userDetails.getUsername();
-    log.info("Agent {} attempting to delete property with ID: {}", agentUsername, propertyId);
-    try {
-      var agent = userRepository.findByEmail(agentUsername)
-          .orElseThrow(() -> {
-            log.error("Agent user '{}' not found in database during delete operation for property ID {}.",
-                agentUsername, propertyId);
-            return new UsernameNotFoundException("Agent not found: " + agentUsername);
-          });
-      propertyService.deleteProperty(propertyId, agent);
-      log.info("Property with ID {} deleted successfully by agent {}.", propertyId, agentUsername);
-    } catch (RuntimeException e) {
-      log.error("Error deleting property ID {} for agent {}: {}", propertyId, agentUsername, e.getMessage(), e);
-    }
-    return "redirect:/properties/manage";
+  public String deleteProperty(@PathVariable Long id) {
+    Property property = propertyRepository.findById(id)
+            .orElseThrow(
+                    () -> {
+                      log.warn(
+                              "Attempt to delete property with id: {}",
+                              id);
+                      return new InvalidPropertyParameterException(
+                              "Property not found with id: " + id);
+                    });
 
+    String title = property.getTitle();
+    Path folderPath = Paths.get("src/main/resources/static/PropertyImages", title);
+
+    try {
+      if (Files.exists(folderPath)) {
+        Files.walk(folderPath)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      log.warn("Failed to delete property image folder.");
+      return "redirect:/properties/manage";
+    }
+
+    propertyRepository.delete(property);
+    log.warn("Property deleted successfully.");
+    return "redirect:/properties/manage";
   }
 
   @GetMapping("/messages/agent")
   @PreAuthorize("hasRole('AGENT')")
   public String viewAllMessages(@AuthenticationPrincipal UserDetails userDetails, Model model) {
     var agent = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new RuntimeException("Agent not found"));
+            .orElseThrow(
+                    () -> {
+                      log.warn(
+                              "Attempt to view message with agent name: {}",
+                              userDetails.getUsername());
+                      return new InvalidUserParameterException(
+                              "User not found with name: " + userDetails.getUsername());
+                    });
     var messages = messageRepository.findByProperty_Agent(agent);
     model.addAttribute("messages", messages);
     return "agent/view_all_messages";
@@ -169,7 +246,14 @@ public class AgentController {
   @PreAuthorize("hasRole('AGENT')")
   public String viewMessage(@PathVariable Long id, Model model) {
     var message = messageRepository.findWithSenderAndPropertyById(id)
-            .orElseThrow(() -> new RuntimeException("Message not found"));
+            .orElseThrow(
+                    () -> {
+                      log.warn(
+                              "Attempt to view message with id: {}",
+                              id);
+                      return new InvalidMessageParameterException(
+                              "Message not found with id: " + id);
+                    });
 
     model.addAttribute("message", message);
     return "agent/view_message";
@@ -180,7 +264,14 @@ public class AgentController {
   @PreAuthorize("hasRole('AGENT')")
   public String replyToMessage(@PathVariable Long id, @RequestParam String reply) {
     var message = messageRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Message not found"));
+            .orElseThrow(
+                    () -> {
+                      log.warn(
+                              "Attempt to reply message with id: {}",
+                              id);
+                      return new InvalidMessageParameterException(
+                              "Message not found with id: " + id);
+                    });
     message.setReply(reply);
     messageRepository.save(message);
     return "redirect:/messages/agent";
@@ -192,6 +283,4 @@ public class AgentController {
     messageRepository.deleteById(id);
     return "redirect:/messages/agent";
   }
-
-
 }
