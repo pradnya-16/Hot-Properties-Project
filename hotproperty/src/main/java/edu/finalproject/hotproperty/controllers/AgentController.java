@@ -94,7 +94,7 @@ public class AgentController {
     return "redirect:/properties/manage";
   }
 
-  @PostMapping("/properties/manage/delete/{propertyId}")
+  @PostMapping("/properties/delete/{id}")
   @PreAuthorize("hasRole('AGENT')")
   public String deleteProperty(
       @PathVariable Long propertyId, @AuthenticationPrincipal UserDetails userDetails) {
