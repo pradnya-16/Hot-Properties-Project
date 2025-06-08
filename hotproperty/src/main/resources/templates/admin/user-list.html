@@ -4,10 +4,11 @@
     <title>User List</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
   </head>
-  <body>
+  <body class="home-background">
+  <div class="property-detail-container">
     <h2>All Registered Users</h2>
 
-    <table border="1">
+    <table class="admin-user-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -33,13 +34,15 @@
               method="post"
               style="display: inline"
             >
-              <button type="submit">Delete</button>
+              <button type="submit" class="btn btn-secondary">Delete</button>
             </form>
           </td>
         </tr>
       </tbody>
     </table>
-
+    <div style="margin-top: 20px">
     <a th:href="@{/dashboard}">← Back to Dashboard</a>
+    </div>
+  </div>
   </body>
 </html>
