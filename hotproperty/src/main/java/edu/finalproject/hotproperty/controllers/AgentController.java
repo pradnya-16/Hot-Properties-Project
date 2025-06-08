@@ -1,5 +1,6 @@
 package edu.finalproject.hotproperty.controllers;
 
+import edu.finalproject.hotproperty.entities.Message;
 import edu.finalproject.hotproperty.entities.Property;
 import edu.finalproject.hotproperty.entities.PropertyImage;
 import edu.finalproject.hotproperty.repositories.MessageRepository;
@@ -177,8 +178,7 @@ public class AgentController {
 
   @PostMapping("/messages/agent/{id}/reply")
   @PreAuthorize("hasRole('AGENT')")
-  public String replyToMessage(@PathVariable Long id,
-                               @RequestParam String reply) {
+  public String replyToMessage(@PathVariable Long id, @RequestParam String reply) {
     var message = messageRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Message not found"));
     message.setReply(reply);
