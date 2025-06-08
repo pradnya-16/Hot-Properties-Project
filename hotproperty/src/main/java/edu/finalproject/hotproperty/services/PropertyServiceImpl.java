@@ -5,6 +5,7 @@ import edu.finalproject.hotproperty.entities.PropertyImage;
 import edu.finalproject.hotproperty.entities.User;
 import edu.finalproject.hotproperty.exceptions.InvalidPropertyParameterException;
 import edu.finalproject.hotproperty.exceptions.PropertyImageManagementException;
+import edu.finalproject.hotproperty.repositories.FavoriteRepository;
 import edu.finalproject.hotproperty.repositories.PropertyImageRepository;
 import edu.finalproject.hotproperty.repositories.PropertyRepository;
 import java.io.File;
@@ -29,6 +30,7 @@ public class PropertyServiceImpl implements PropertyService {
 
   private final PropertyRepository propertyRepository;
   private final PropertyImageRepository propertyImageRepository;
+  private final FavoriteRepository favoriteRepository;
 
   private static final Logger log = LoggerFactory.getLogger(PropertyServiceImpl.class);
   private static final String PROPERTY_IMAGES_BASE_PATH =
@@ -36,9 +38,12 @@ public class PropertyServiceImpl implements PropertyService {
 
   @Autowired
   public PropertyServiceImpl(
-      PropertyRepository propertyRepository, PropertyImageRepository propertyImageRepository) {
+      PropertyRepository propertyRepository,
+      PropertyImageRepository propertyImageRepository,
+      FavoriteRepository favoriteRepository) {
     this.propertyRepository = propertyRepository;
     this.propertyImageRepository = propertyImageRepository;
+    this.favoriteRepository = favoriteRepository;
   }
 
   @Override
@@ -131,7 +136,12 @@ public class PropertyServiceImpl implements PropertyService {
     if (agent == null) {
       throw new UsernameNotFoundException("Agent cannot be null for getting properties.");
     }
-    return propertyRepository.findWithImagesByAgent(agent);
+    List<Property> properties = propertyRepository.findWithImagesByAgent(agent);
+    for (Property prop : properties) {
+      long count = favoriteRepository.countByPropertyId(prop.getId());
+      prop.setFavoriteCount((int) count);
+    }
+    return properties;
   }
 
   @Override

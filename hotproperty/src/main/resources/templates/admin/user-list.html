@@ -5,44 +5,45 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
   </head>
   <body class="home-background">
-  <div class="property-detail-container">
-    <h2>All Registered Users</h2>
+    <div class="property-detail-container">
+      <h2>All Registered Users</h2>
 
-    <table class="admin-user-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Created At</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="user : ${users}">
-          <td th:text="${user.id}"></td>
-          <td th:text="${user.firstName + ' ' + user.lastName}"></td>
-          <td th:text="${user.email}"></td>
-          <td th:text="${user.role}"></td>
-          <td
-            th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"
-          ></td>
-          <td>
-            <form
-              th:action="@{'/users/admin/delete/' + ${user.id}}"
-              method="post"
-              style="display: inline"
-            >
-              <button type="submit" class="btn btn-secondary">Delete</button>
-            </form>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="margin-top: 20px">
-    <a th:href="@{/dashboard}">← Back to Dashboard</a>
+      <table class="admin-user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created At</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td
+              th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"
+            ></td>
+            <td>
+              <form
+                th:action="@{'/users/admin/delete/' + ${user.id}}"
+                method="post"
+                style="display: inline"
+                onsubmit="return confirm('Are you sure you want to delete this user?');"
+              >
+                <button type="submit" class="btn btn-secondary">Delete</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 20px">
+        <a th:href="@{/dashboard}">← Back to Dashboard</a>
+      </div>
     </div>
-  </div>
   </body>
 </html>
