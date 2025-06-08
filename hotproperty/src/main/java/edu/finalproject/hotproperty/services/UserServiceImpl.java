@@ -102,11 +102,6 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findByEmail(String email) {
-    return userRepository.findByEmail(email).orElse(null);
-  }
-
-  @Override
   public User getCurrentUser(UserDetails userDetails) {
     if (userDetails == null) {
       log.warn("Attempted to fetch current user with null UserDetails.");
@@ -119,5 +114,10 @@ public class UserServiceImpl implements UserService {
               log.warn("User not found with email from UserDetails: {}", userDetails.getUsername());
               return new UsernameNotFoundException("User not found: " + userDetails.getUsername());
             });
+  }
+
+  @Override
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email).orElse(null);
   }
 }
