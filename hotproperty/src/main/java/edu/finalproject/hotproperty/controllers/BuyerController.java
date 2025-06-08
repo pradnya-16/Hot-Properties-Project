@@ -1,8 +1,6 @@
 package edu.finalproject.hotproperty.controllers;
 
-import edu.finalproject.hotproperty.entities.Favorite;
-import edu.finalproject.hotproperty.entities.Property;
-import edu.finalproject.hotproperty.entities.User;
+import edu.finalproject.hotproperty.entities.*;
 import edu.finalproject.hotproperty.exceptions.InvalidFavoriteParameterException;
 import edu.finalproject.hotproperty.exceptions.InvalidPropertyParameterException;
 import edu.finalproject.hotproperty.repositories.UserRepository;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import edu.finalproject.hotproperty.entities.Message;
 import edu.finalproject.hotproperty.services.BuyerMessageService;
 import edu.finalproject.hotproperty.exceptions.InvalidMessageParameterException;
 
@@ -217,6 +214,11 @@ public class BuyerController {
       @PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
     Property property = propertyService.findWithImagesById(id);
     model.addAttribute("property", property);
+
+    List<String> imageFileName = property.getImages().stream()
+            .map(PropertyImage::getImageFileName)
+            .toList();
+    model.addAttribute("imageFileNames", imageFileName);
 
     if (userDetails != null) {
       User buyer = userRepository.findByEmail(userDetails.getUsername()).orElse(null);
