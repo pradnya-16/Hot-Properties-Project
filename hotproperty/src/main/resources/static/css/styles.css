@@ -838,3 +838,70 @@ h2 {
 }
 
 
+
+
+
+
+
+
+
+/* --------------------------------------------------
+  Table Styling (Buyer Messaging Table Only)
+-------------------------------------------------- */
+.buyer-messages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.buyer-messages-table th, .buyer-messages-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.buyer-messages-table th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.buyer-messages-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.buyer-messages-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+
+/* --------------------------------------------------
+  Admin User List Table Styling
+-------------------------------------------------- */
+.admin-user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.admin-user-table th, .admin-user-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.admin-user-table th {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.admin-user-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.admin-user-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+
