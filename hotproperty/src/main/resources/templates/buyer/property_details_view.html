@@ -1,66 +1,67 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8" />
-  <title th:text="${property.title}">Property Details</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}" />
-</head>
-<body class="home-background">
-<div th:replace="~{fragments/header :: header}"></div>
-<div class="property-detail-container">
-  <div
-          th:if="${successMessage}"
-          class="alert alert-success"
-          th:text="${successMessage}"
-  ></div>
-  <div
-          th:if="${errorMessage}"
-          class="alert alert-danger"
-          th:text="${errorMessage}"
-  ></div>
+  <head>
+    <meta charset="UTF-8" />
+    <title th:text="${property.title}">Property Details</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body class="home-background">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="property-detail-container">
+      <div
+        th:if="${successMessage}"
+        class="alert alert-success"
+        th:text="${successMessage}"
+      ></div>
+      <div
+        th:if="${errorMessage}"
+        class="alert alert-danger"
+        th:text="${errorMessage}"
+      ></div>
 
-  <div class="title-row">
-    <h1 th:text="${property.title}"></h1>
-    <div th:if="${isFavorite != null}" sec:authorize="hasRole('BUYER')">
-      <form
-              th:if="${isFavorite}"
-              th:action="@{/favorites/remove/{id}(id=${property.id})}"
-              method="post"
-              style="display: inline"
-      >
-        <button type="submit" class="btn btn-secondary">
-          Remove from Favorites
-        </button>
-      </form>
-      <form
-              th:unless="${isFavorite}"
-              th:action="@{/favorites/add/{id}(id=${property.id})}"
-              method="post"
-              style="display: inline"
-      >
-        <button type="submit" class="btn btn-primary">
-          Add to Favorites
-        </button>
-      </form>
-    </div>
-  </div>
+      <div class="title-row">
+        <h1 th:text="${property.title}"></h1>
+        <div th:if="${isFavorite != null}" sec:authorize="hasRole('BUYER')">
+          <form
+            th:if="${isFavorite}"
+            th:action="@{/favorites/remove/{id}(id=${property.id})}"
+            method="post"
+            style="display: inline"
+            onsubmit="return confirm('Are you sure you want to remove this property from your favorites?');"
+          >
+            <button type="submit" class="btn btn-secondary">
+              Remove from Favorites
+            </button>
+          </form>
+          <form
+            th:unless="${isFavorite}"
+            th:action="@{/favorites/add/{id}(id=${property.id})}"
+            method="post"
+            style="display: inline"
+          >
+            <button type="submit" class="btn btn-primary">
+              Add to Favorites
+            </button>
+          </form>
+        </div>
+      </div>
 
-  <table class="property-detail-table">
-    <tr>
-      <th>Price:</th>
-      <td
-              th:text="'$' + ${#numbers.formatDecimal(property.price, 0, 'COMMA', 0, 'POINT')}"
-      ></td>
-    </tr>
-    <tr>
-      <th>Location:</th>
-      <td th:text="${property.location}"></td>
-    </tr>
-    <tr>
-      <th>Size:</th>
-      <td th:text="${property.size} + ' sq ft'"></td>
-    </tr>
-  </table>
+      <table class="property-detail-table">
+        <tr>
+          <th>Price:</th>
+          <td
+            th:text="'$' + ${#numbers.formatDecimal(property.price, 0, 'COMMA', 0, 'POINT')}"
+          ></td>
+        </tr>
+        <tr>
+          <th>Location:</th>
+          <td th:text="${property.location}"></td>
+        </tr>
+        <tr>
+          <th>Size:</th>
+          <td th:text="${property.size} + ' sq ft'"></td>
+        </tr>
+      </table>
 
       <div>
         <h3><strong>Description:</strong></h3>
@@ -81,7 +82,7 @@
         />
       </div>
 
-      <div id="image-viewer" class="image-viewer" style="display:none;">
+      <div id="image-viewer" class="image-viewer" style="display: none">
         <span class="close" onclick="closeImageViewer()">×</span>
         <img class="overlay-image" id="overlay-img" src="" />
         <a class="prev" onclick="changeImage(-1)">‹</a>
@@ -97,22 +98,23 @@
         function openImageViewer(index) {
           currentIndex = index;
           const fileName = images[index];
-          document.getElementById("overlay-img").src = imageFolder + "/" + fileName;
+          document.getElementById("overlay-img").src =
+            imageFolder + "/" + fileName;
           document.getElementById("image-viewer").style.display = "block";
 
           const prevBtn = document.querySelector(".prev");
           const nextBtn = document.querySelector(".next");
 
           if (currentIndex == 0) {
-              prevBtn.style.display = "none"
+            prevBtn.style.display = "none";
           } else {
-              prevBtn.style.display = "block"
+            prevBtn.style.display = "block";
           }
 
           if (currentIndex == images.length - 1) {
-              nextBtn.style.display = "none"
+            nextBtn.style.display = "none";
           } else {
-              nextBtn.style.display = "block"
+            nextBtn.style.display = "block";
           }
         }
 
@@ -125,28 +127,32 @@
 
           if (newIndex >= 0 && newIndex < images.length) {
             openImageViewer(newIndex);
-    }
+          }
         }
       </script>
 
       <h2 style="text-align:left"><strong>Contact the Agent</strong></h2>
 
-  <form th:action="@{'/messages/send/' + ${property.id}}" method="post">
-    <p>Your Message:</p>
-    <div>
-      <textarea class="message-input-box" name="content" required></textarea>
-    </div>
-    <div style="margin-top: 10px">
-      <button type="submit" class="btn btn-primary">Send Message</button>
-    </div>
-  </form>
+      <form th:action="@{'/messages/send/' + ${property.id}}" method="post">
+        <p>Your Message:</p>
+        <div>
+          <textarea
+            class="message-input-box"
+            name="content"
+            required
+          ></textarea>
+        </div>
+        <div style="margin-top: 10px">
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </div>
+      </form>
 
-  <div style="margin-top: 20px">
-    <a th:href="@{/properties/list}" class="btn btn-primary"
-    >← Back to Listings</a
-    >
-  </div>
-</div>
-<div th:replace="~{fragments/footer :: footer}"></div>
-</body>
+      <div style="margin-top: 20px">
+        <a th:href="@{/properties/list}" class="btn btn-primary"
+          >← Back to Listings</a
+        >
+      </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+  </body>
 </html>

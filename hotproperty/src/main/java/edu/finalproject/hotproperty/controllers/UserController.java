@@ -2,8 +2,10 @@ package edu.finalproject.hotproperty.controllers;
 
 import edu.finalproject.hotproperty.dtos.UserProfileUpdateDto;
 import edu.finalproject.hotproperty.entities.User;
+import edu.finalproject.hotproperty.entities.enums.RoleType;
 import edu.finalproject.hotproperty.exceptions.InvalidUserParameterException;
 import edu.finalproject.hotproperty.services.AuthService;
+import edu.finalproject.hotproperty.services.FavoriteService;
 import edu.finalproject.hotproperty.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -27,11 +29,14 @@ public class UserController {
 
   private final UserService userService;
   private final AuthService authService;
+  private final FavoriteService favoriteService;
 
   @Autowired
-  public UserController(UserService userService, AuthService authService) {
+  public UserController(
+      UserService userService, AuthService authService, FavoriteService favoriteService) {
     this.userService = userService;
     this.authService = authService;
+    this.favoriteService = favoriteService;
   }
 
   @PreAuthorize("isAuthenticated()")
@@ -39,6 +44,11 @@ public class UserController {
   public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
     User user = userService.getCurrentUser(userDetails);
     model.addAttribute("user", user);
+
+    if (user.getRole() == RoleType.BUYER) {
+      int favoriteCount = favoriteService.getFavoritesByBuyer(user).size();
+      model.addAttribute("favoriteCount", favoriteCount);
+    }
     return "/shared/dashboard";
   }
 

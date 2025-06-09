@@ -31,19 +31,33 @@ public class Property {
   @JoinColumn(name = "agent_id", nullable = false)
   private User agent;
 
-  @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "property",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
   private Set<PropertyImage> images = new HashSet<>();
 
-  @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "property",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
   private Set<Favorite> favorites = new HashSet<>();
 
-  @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "property",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
   private Set<Message> messages = new HashSet<>();
 
-  public Property() {
-  }
+  @Transient private int favoriteCount;
 
-  public Property(String title, Double price, String location, Integer size, String description, User agent) {
+  public Property() {}
+
+  public Property(
+      String title, Double price, String location, Integer size, String description, User agent) {
     this.title = title;
     this.price = price;
     this.location = location;
@@ -160,5 +174,13 @@ public class Property {
   public void removeMessage(Message message) {
     messages.remove(message);
     message.setProperty(null);
+  }
+
+  public int getFavoriteCount() {
+    return favoriteCount;
+  }
+
+  public void setFavoriteCount(int favoriteCount) {
+    this.favoriteCount = favoriteCount;
   }
 }

@@ -40,6 +40,10 @@
               <strong>Size:</strong> <span th:text="${property.size}"></span> sq
               ft
             </p>
+            <p>
+              <strong>Favorited by:</strong>
+              <span th:text="${property.favoriteCount}">0</span> users
+            </p>
 
             <div class="button-group">
               <a
@@ -52,6 +56,7 @@
               <form
                 th:action="@{'/properties/delete/' + ${property.id}}"
                 method="post"
+                onsubmit="return confirm('Are you sure you want to delete this property?');"
               >
                 <button class="filter-btn filter-btn-primary" type="submit">
                   Delete

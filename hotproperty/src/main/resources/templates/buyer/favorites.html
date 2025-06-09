@@ -111,6 +111,7 @@
                 th:action="@{/favorites/remove/{id}(id=${property.id})}"
                 method="post"
                 style="display: inline; margin: 0"
+                onsubmit="return confirm('Are you sure you want to remove this property from your favorites?');"
               >
                 <button type="submit" class="btn btn-secondary">
                   Remove Favorite
