@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Messages</title>
+    <title>Your Messages</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body class="home-background">
-<div class="property-detail-container">
-<h2>My Sent Messages</h2>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="message-detail-container">
+<h2>Your Messages</h2>
 
     <table class="buyer-messages-table">
     <tr>
         <th>Receiver (Agent)</th>
         <th>Property</th>
-        <th>Message</th>
+        <th>Your Message</th>
+        <th>Sent At</th>
         <th>Agent Reply</th>
-        <th>Timestamp</th>
-        <th>Action</th>
+        <th>Actions</th>
     </tr>
     <tr th:each="message : ${messages}">
         <td th:text="${message.receiver.firstName}"></td>
         <td th:text="${message.property.title}"></td>
         <td th:text="${message.content}"></td>
-        <td th:text="${message.reply != null ? message.reply : 'No reply yet'}"></td>
         <td th:text="${#temporals.format(message.timestamp, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${message.reply != null ? message.reply : 'No reply yet'}"></td>
         <td>
             <form th:action="@{'/messages/delete/' + ${message.id}}" method="post">
-                <button type="submit">Delete</button>
+                <button class="btn btn-danger" type="submit">Delete</button>
             </form>
         </td>
     </tr>
 </table>
-    <div style="margin-top: 20px">
-<a th:href="@{/dashboard}" class="btn btn-primary">← Back to Dashboard</a>
+    <div class="back-link">
+<a th:href="@{/dashboard}">← Back to Dashboard</a>
     </div>
 </div>
 </body>
