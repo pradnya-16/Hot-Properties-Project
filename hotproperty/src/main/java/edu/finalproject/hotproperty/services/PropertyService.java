@@ -24,4 +24,8 @@ public interface PropertyService {
 
   Property addProperty(Property propertyDetails, MultipartFile imageFile, User agent)
       throws IOException;
+
+  void addImageToProperty(Long propertyId, MultipartFile imageFile, User agent) throws IOException;
+
+  void removeImageFromProperty(Long propertyId, Long imageId, User agent) throws IOException;
 }

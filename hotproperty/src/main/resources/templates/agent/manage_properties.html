@@ -22,7 +22,7 @@
             th:if="${property.images != null and #lists.size(property.images) > 0}"
           >
             <img
-              th:src="@{'/PropertyImages/' + ${property.title} + '/' + ${property.images[0].imageFileName}}"
+              th:src="@{'/properties/' + ${property.images[0].imageFileName}}"
               alt="Image"
             />
           </div>
