@@ -27,7 +27,7 @@
           <a th:href="@{/favorites}" class="dashboard-link"
             >Saved Favorites
             <span
-              th:if="${favoriteCount != null}"
+              th:if="${favoriteCount != null && favoriteCount > 0}"
               th:text="'(' + ${favoriteCount} + ')'"
             ></span></a
           ><br />
@@ -43,7 +43,11 @@
             >Add New Property</a
           ><br />
           <a th:href="@{/messages/agent}" class="dashboard-link"
-            >View Messages</a
+            >View Messages
+            <span
+              th:if="${unrepliedMessageCount != null && unrepliedMessageCount > 0}"
+              th:text="'(' + ${unrepliedMessageCount} + ')'"
+            ></span></a
           ><br />
         </div>
         <div th:if="${user.role.name() == 'ADMIN'}">
