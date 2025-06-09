@@ -48,14 +48,16 @@ public class AgentMessageServiceImpl implements AgentMessageService {
                     new InvalidMessageParameterException(
                         "Message not found with ID: " + messageId));
 
-    if (message.getProperty() == null
-        || message.getProperty().getAgent() == null
-        || !message.getProperty().getAgent().getId().equals(agent.getId())) {
-      log.warn(
-          "Agent {} attempted to access message {} not belonging to them or their properties.",
-          agent.getEmail(),
-          messageId);
-      throw new AccessDeniedException("You are not authorized to view this message.");
+    if (message.getReceiver() == null || !message.getReceiver().getId().equals(agent.getId())) {
+      if (message.getProperty() == null
+          || message.getProperty().getAgent() == null
+          || !message.getProperty().getAgent().getId().equals(agent.getId())) {
+        log.warn(
+            "Agent {} attempted to access message {} not belonging to them or their properties.",
+            agent.getEmail(),
+            messageId);
+        throw new AccessDeniedException("You are not authorized to view this message.");
+      }
     }
     return message;
   }
@@ -78,5 +80,15 @@ public class AgentMessageServiceImpl implements AgentMessageService {
     Message message = getMessageByIdForAgent(messageId, agent);
     messageRepository.deleteById(message.getId());
     log.info("Agent {} deleted message {}", agent.getEmail(), messageId);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public long getUnrepliedMessageCount(User agent) {
+    if (agent == null) {
+      log.warn("Attempted to get unreplied message count for a null agent.");
+      throw new IllegalArgumentException("Agent cannot be null.");
+    }
+    return messageRepository.countUnrepliedMessagesForAgent(agent);
   }
 }

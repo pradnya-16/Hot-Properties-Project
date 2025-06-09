@@ -12,4 +12,6 @@ public interface AgentMessageService {
   void replyToMessage(Long messageId, String reply, User agent);
 
   void deleteMessageForAgent(Long messageId, User agent);
+
+  long getUnrepliedMessageCount(User agent);
 }

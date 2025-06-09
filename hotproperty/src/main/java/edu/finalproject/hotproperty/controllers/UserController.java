@@ -4,6 +4,7 @@ import edu.finalproject.hotproperty.dtos.UserProfileUpdateDto;
 import edu.finalproject.hotproperty.entities.User;
 import edu.finalproject.hotproperty.entities.enums.RoleType;
 import edu.finalproject.hotproperty.exceptions.InvalidUserParameterException;
+import edu.finalproject.hotproperty.services.AgentMessageService;
 import edu.finalproject.hotproperty.services.AuthService;
 import edu.finalproject.hotproperty.services.FavoriteService;
 import edu.finalproject.hotproperty.services.UserService;
@@ -30,13 +31,18 @@ public class UserController {
   private final UserService userService;
   private final AuthService authService;
   private final FavoriteService favoriteService;
+  private final AgentMessageService agentMessageService;
 
   @Autowired
   public UserController(
-      UserService userService, AuthService authService, FavoriteService favoriteService) {
+      UserService userService,
+      AuthService authService,
+      FavoriteService favoriteService,
+      AgentMessageService agentMessageService) {
     this.userService = userService;
     this.authService = authService;
     this.favoriteService = favoriteService;
+    this.agentMessageService = agentMessageService;
   }
 
   @PreAuthorize("isAuthenticated()")
@@ -48,6 +54,9 @@ public class UserController {
     if (user.getRole() == RoleType.BUYER) {
       int favoriteCount = favoriteService.getFavoritesByBuyer(user).size();
       model.addAttribute("favoriteCount", favoriteCount);
+    } else if (user.getRole() == RoleType.AGENT) {
+      long unrepliedMessageCount = agentMessageService.getUnrepliedMessageCount(user);
+      model.addAttribute("unrepliedMessageCount", unrepliedMessageCount);
     }
     return "/shared/dashboard";
   }
