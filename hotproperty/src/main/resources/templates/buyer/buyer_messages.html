@@ -1,20 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title>My Messages</title>
+<head>
+    <title>Your Messages</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
-  </head>
-  <body class="home-background">
-    <div class="property-detail-container">
-      <h2>My Sent Messages</h2>
+</head>
+<body class="home-background">
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="message-detail-container">
+<h2>Your Messages</h2>
 
       <table class="buyer-messages-table">
         <tr>
           <th>Receiver (Agent)</th>
           <th>Property</th>
           <th>Message</th>
+          <th>Sent At</th>
           <th>Agent Reply</th>
-          <th>Timestamp</th>
           <th>Action</th>
         </tr>
         <tr th:each="message : ${messages}">
@@ -22,10 +23,10 @@
           <td th:text="${message.property.title}"></td>
           <td th:text="${message.content}"></td>
           <td
-            th:text="${message.reply != null ? message.reply : 'No reply yet'}"
+            th:text="${#temporals.format(message.timestamp, 'yyyy-MM-dd HH:mm')}"
           ></td>
           <td
-            th:text="${#temporals.format(message.timestamp, 'yyyy-MM-dd HH:mm')}"
+            th:text="${message.reply != null ? message.reply : 'No reply yet'}"
           ></td>
           <td>
             <form
@@ -35,14 +36,13 @@
             >
               <button type="submit">Delete</button>
             </form>
-          </td>
-        </tr>
-      </table>
-      <div style="margin-top: 20px">
-        <a th:href="@{/dashboard}" class="btn btn-primary"
-          >← Back to Dashboard</a
-        >
-      </div>
+        </td>
+    </tr>
+</table>
+    <div class="back-link">
+<a th:href="@{/dashboard}">← Back to Dashboard</a>
     </div>
-  </body>
+</div>
+</body>
 </html>
+

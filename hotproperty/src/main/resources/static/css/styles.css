@@ -809,7 +809,7 @@ h2 {
 
 .back-link {
     display: block;
-    text-align: left;
+    text-align: center;
     margin-top: 30px;
 }
 
@@ -903,5 +903,15 @@ h2 {
   background-color: #f1f1f1;
 }
 
-
+/* --------------------------------------------------
+  Buyer All Message Page
+-------------------------------------------------- */
+.message-detail-container {
+  width: 80%;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 

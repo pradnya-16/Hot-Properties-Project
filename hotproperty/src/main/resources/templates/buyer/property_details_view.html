@@ -67,7 +67,7 @@
         <h3><strong>Description:</strong></h3>
       </div>
       <p th:text="${property.description}"></p>
-      <h2><strong>Property Images</strong></h2>
+      <h2 style="text-align:left"><strong>Property Images</strong></h2>
       <div
         th:if="${property.images == null or #lists.isEmpty(property.images)}"
       >
@@ -131,7 +131,7 @@
         }
       </script>
 
-      <h2><strong>Contact the Agent</strong></h2>
+      <h2 style="text-align:left"><strong>Contact the Agent</strong></h2>
 
       <form th:action="@{'/messages/send/' + ${property.id}}" method="post">
         <p>Your Message:</p>

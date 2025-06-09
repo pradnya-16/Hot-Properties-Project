@@ -2,29 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Message Details</title>
+  <title>View Message</title>
   <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body class="home-background">
-<div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container">
+<div class="message-detail-container">
   <h2>Message Details</h2>
 
   <p><strong>From:</strong>
     <span th:text="|${message.sender.firstName} ${message.sender.lastName}|"></span>
     (<span th:text="${message.sender.email}"></span>)
   </p>
-
   <p><strong>Property:</strong>
     <span th:text="${message.property.title}"></span>
   </p>
-
+  <hr>
   <p><strong>Message:</strong></p>
   <p th:text="${message.content}"></p>
+  <hr>
+  <p><strong>Reply to Buyer</strong></p>
 
   <form th:action="@{'/messages/agent/' + ${message.id} + '/reply'}" method="post">
-    <label for="reply"><strong>Reply:</strong></label>
+    <label for="reply"><strong>Your reply:</strong></label>
     <textarea id="reply" name="reply" rows="4" class="form-control" required
               th:text="${message.reply}"></textarea>
     <br />
