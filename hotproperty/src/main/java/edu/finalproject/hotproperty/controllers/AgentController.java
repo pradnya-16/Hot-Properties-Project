@@ -97,7 +97,7 @@ public class AgentController {
   @PostMapping("/properties/delete/{id}")
   @PreAuthorize("hasRole('AGENT')")
   public String deleteProperty(
-      @PathVariable Long propertyId, @AuthenticationPrincipal UserDetails userDetails) {
+      @PathVariable("id") Long propertyId, @AuthenticationPrincipal UserDetails userDetails) {
     String agentUsername = userDetails.getUsername();
     log.info("Agent {} attempting to delete property with ID: {}", agentUsername, propertyId);
     try {
