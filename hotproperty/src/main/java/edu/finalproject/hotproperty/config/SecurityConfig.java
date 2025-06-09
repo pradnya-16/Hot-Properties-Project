@@ -67,7 +67,7 @@ public class SecurityConfig {
                         "/js/**",
                         "/webjars/**",
                         "/error",
-                        "/PropertyImages/**")
+                        "/properties/**")
                     .permitAll()
                     .requestMatchers("/users/admin/**")
                     .hasRole("ADMIN")
@@ -82,6 +82,8 @@ public class SecurityConfig {
                         "/favorites",
                         "/favorites/**",
                         "/messages/buyer",
+                        "/messages/send/**",
+                        "/messages/delete/**",
                         "/properties/list",
                         "/properties/view/**")
                     .hasRole("BUYER")

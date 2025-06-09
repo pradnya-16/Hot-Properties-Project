@@ -1,39 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Edit Property</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}" />
-</head>
-<body class="home-background">
-<div th:replace="~{fragments/header :: header}"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit Property</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body class="home-background">
+    <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="auth-container">
-  <h2>Edit Property</h2>
-  <form th:action="@{/properties/edit/{id}(id=${property.id})}" th:object="${property}" method="post">
-    <div class="form-group">
-      <label>Title</label>
-      <input type="text" th:field="*{title}" class="form-control"/>
-    </div>
-    <div class="form-group">
-      <label>Price</label>
-      <input type="number" th:field="*{price}" class="form-control"/>
-    </div>
-    <div class="form-group">
-      <label>Location</label>
-      <input type="text" th:field="*{location}" class="form-control"/>
-    </div>
-    <div class="form-group">
-      <label>Size (sq ft)</label>
-      <input type="number" th:field="*{size}" class="form-control"/>
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <textarea th:field="*{description}" class="form-control"></textarea>
-    </div>
+    <div class="auth-container">
+      <h2>Edit Property</h2>
 
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-  </form>
-</div>
-</body>
+      <div
+        th:if="${successMessage}"
+        class="alert alert-success"
+        th:text="${successMessage}"
+      ></div>
+      <div
+        th:if="${errorMessage}"
+        class="alert alert-danger"
+        th:text="${errorMessage}"
+      ></div>
+
+      <form
+        th:action="@{/properties/edit/{id}(id=${property.id})}"
+        th:object="${property}"
+        method="post"
+      >
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" th:field="*{title}" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Price</label>
+          <input type="number" th:field="*{price}" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" th:field="*{location}" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Size (sq ft)</label>
+          <input type="number" th:field="*{size}" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea th:field="*{description}" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Save Property Details
+        </button>
+      </form>
+
+      <div class="image-management-container">
+        <h3>Manage Property Images</h3>
+
+        <h4>Current Images:</h4>
+        <div
+          th:if="${property.images == null or #lists.isEmpty(property.images)}"
+        >
+          <p>No images uploaded yet for this property.</p>
+        </div>
+        <div
+          class="current-images"
+          th:unless="${property.images == null or #lists.isEmpty(property.images)}"
+        >
+          <div th:each="image : ${property.images}" class="img-container">
+            <img
+              th:src="@{'/properties/' + ${image.imageFileName}}"
+              alt="Property Image"
+            />
+            <form
+              th:action="@{/properties/edit/{propertyId}/removeImage/{imageId}(propertyId=${property.id}, imageId=${image.id})}"
+              method="post"
+              onsubmit="return confirm('Are you sure you want to delete this image?');"
+            >
+              <button type="submit" class="remove-img-btn">×</button>
+            </form>
+          </div>
+        </div>
+
+        <h4>Add New Image:</h4>
+        <form
+          class="add-image-form"
+          th:action="@{/properties/edit/{id}/addImage(id=${property.id})}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group">
+            <input
+              type="file"
+              name="imageFile"
+              class="form-control-file"
+              accept="image/*"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-success">Upload Image</button>
+        </form>
+      </div>
+      <div style="margin-top: 20px">
+        <a th:href="@{/properties/manage}" class="btn btn-secondary"
+          >Back to Manage Properties</a
+        >
+      </div>
+    </div>
+  </body>
 </html>

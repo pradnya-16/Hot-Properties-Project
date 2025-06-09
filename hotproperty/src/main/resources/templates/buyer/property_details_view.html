@@ -67,7 +67,7 @@
         <h3><strong>Description:</strong></h3>
       </div>
       <p th:text="${property.description}"></p>
-      <h2 style="text-align:left"><strong>Property Images</strong></h2>
+      <h2 style="text-align: left"><strong>Property Images</strong></h2>
       <div
         th:if="${property.images == null or #lists.isEmpty(property.images)}"
       >
@@ -76,12 +76,11 @@
       <div th:each="image, stat: ${property.images}">
         <img
           class="property-images"
-          th:src="@{'/PropertyImages/' + ${property.title} + '/' + ${image.imageFileName}}"
+          th:src="@{'/properties/' + ${image.imageFileName}}"
           th:onclick="'openImageViewer(' + ${stat.index} + ')'"
           alt="Property Image"
         />
       </div>
-
       <div id="image-viewer" class="image-viewer" style="display: none">
         <span class="close" onclick="closeImageViewer()">×</span>
         <img class="overlay-image" id="overlay-img" src="" />
@@ -91,7 +90,7 @@
 
       <script th:inline="javascript">
         const images = /*[[${imageFileNames}]]*/ [];
-        const imageFolder = "/PropertyImages/" + /*[[${property.title}]]*/ "";
+        const imageFolder = /*[[@{/properties}]]*/ "";
 
         let currentIndex = 0;
 
@@ -101,7 +100,6 @@
           document.getElementById("overlay-img").src =
             imageFolder + "/" + fileName;
           document.getElementById("image-viewer").style.display = "block";
-
           const prevBtn = document.querySelector(".prev");
           const nextBtn = document.querySelector(".next");
 
@@ -131,7 +129,7 @@
         }
       </script>
 
-      <h2 style="text-align:left"><strong>Contact the Agent</strong></h2>
+      <h2 style="text-align: left"><strong>Contact the Agent</strong></h2>
 
       <form th:action="@{'/messages/send/' + ${property.id}}" method="post">
         <p>Your Message:</p>

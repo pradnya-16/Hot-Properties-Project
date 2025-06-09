@@ -52,20 +52,8 @@
             <a th:href="@{/properties/view/{id}(id=${property.id})}">
               <img
                 th:if="${property.images != null and not #lists.isEmpty(property.images)}"
-                th:src="@{'/PropertyImages/' + ${property.title} + '/' + ${property.images[0].imageFileName}}"
+                th:src="@{'/properties/' + ${property.images[0].imageFileName}}"
                 alt="Property Image"
-              />
-              <img
-                th:if="${property.images == null or #lists.isEmpty(property.images)}"
-                th:src="@{/images/default-property.png}"
-                alt="No Image Available"
-                style="
-                  width: 250px;
-                  height: 160px;
-                  object-fit: cover;
-                  border-radius: 5px;
-                  border: 1px solid #ddd;
-                "
               />
             </a>
           </div>
